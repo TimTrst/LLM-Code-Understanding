@@ -1,15 +1,21 @@
 from flask import Flask, render_template, request, jsonify
 from LLM import make_request_bert
-import requests
 from waitress import serve
+import datetime
 
 app = Flask(__name__)
+
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return 'This is the flask server'
-    return render_template('index.html')
+    return {
+        'Project': 'Leveraging LLMs to help novice learners wih code understanding',
+        'Date': datetime.datetime.now(),
+        'Backend': "Flask",
+        'Frontend': "React"
+    }
+
 
 @app.route('/requests')
 def get_request():
@@ -19,6 +25,7 @@ def get_request():
         "code_understanding.html",
         response=llm_response
     )
+
 
 @app.route('/ask', methods=['POST'])
 def ask():
@@ -34,6 +41,8 @@ def ask():
 
     return jsonify({'answer': answer})
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
-    #serve(app, host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=8000, debug=True)
+    # serve(app, host="0.0.0.0", port=5000)
+

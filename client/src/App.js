@@ -1,43 +1,39 @@
-import React, { useState, useEffect } from 'react'
-import './App.css';
-
-
+import React, {useState, useEffect} from 'react'
 
 function App() {
 
-   const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+    const [data, setData] = useState({
+        project: "",
+        date: "",
+        backend: "",
+        frontend: ""
+    })
 
-  const handleSubmit = async (event) => {
-      event.preventDefault()
-      const response = await fetch('/ask', {
-          method: 'POST',
-          headers:{
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({question})
-      })
-      const data = await response.json()
-      setAnswer(data.answer)
-  }
+    useEffect(() => {
+        fetch("/index").then((res) => {
+            res.json().then((data) => {
+                setData(
+                    {
+                        project: data.Project,
+                        date: data.Date,
+                        backend: data.Backend,
+                        frontend: data.Frontend
+                    }
+                )
+            })
+        })
+    }, [])
 
     return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Ask a Question</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="Type your question here"
-            required
-          />
-          <button type="submit">Ask</button>
-        </form>
-        {answer && <p>Answer: {answer}</p>}
-      </header>
-    </div>
+        <div className="App">
+            <header className="App-header">
+                <h1>React and Flask</h1>
+                <p>{data.project}</p>
+                <p>{data.date}</p>
+                <p>{data.backend}</p>
+                <p>{data.frontend}</p>
+            </header>
+        </div>
     );
 }
 

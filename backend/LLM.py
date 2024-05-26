@@ -14,7 +14,6 @@ def chain_setup():
     template = """<|prompter|>{question}<|endoftext|>
     <|assistant|>"""
 
-
 def generate_response(question, llm_chain):
     if not bool(question.strip()):
         question = "Please tell the user, that he needs input something."
