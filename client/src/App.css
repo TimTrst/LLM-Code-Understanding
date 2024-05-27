@@ -1,27 +1,19 @@
-.App {
-  text-align: center;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.first-color {
+	background: #00204a;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.second-color {
+	background: #005792;
 }
 
-.App-link {
-  color: #61dafb;
+.third-color {
+	background: #00bbf0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.fourth-color {
+	background: #fdb44b;
 }
