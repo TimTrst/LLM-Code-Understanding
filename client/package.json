@@ -2,7 +2,6 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://127.0.0.1:8000/",
   "dependencies": {
     "@codemirror/lang-java": "^6.0.1",
     "@codemirror/lang-javascript": "^6.2.2",
@@ -16,6 +15,8 @@
     "@testing-library/user-event": "^13.5.0",
     "@uiw/codemirror-theme-vscode": "^4.22.1",
     "@uiw/react-codemirror": "^4.22.1",
+    "create-react-app": "^5.0.1",
+    "http-proxy-middleware": "^3.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
@@ -49,8 +50,8 @@
     "@babel/plugin-transform-private-property-in-object": "^7.24.6",
     "@eslint/compat": "^1.0.1",
     "@eslint/js": "^9.3.0",
-    "eslint": "^9.3.0",
-    "eslint-plugin-react": "^7.34.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.2",
     "globals": "^15.3.0"
   }
 }
