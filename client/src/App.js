@@ -13,7 +13,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/index');
+        const response = await fetch('/api/index');
         console.log(response)
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
