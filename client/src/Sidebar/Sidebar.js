@@ -83,17 +83,17 @@ function Sidebar(props) {
                     ml: {sm: `${drawerWidth}px`},
                 }}
             >
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        sx={{mr: 2, display: {sm: 'none'}}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                </Toolbar>
+            <Toolbar>
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleDrawerToggle}
+                    sx={{mr: 2, display: {sm: 'none'}}}
+                >
+                    <MenuIcon/>
+                </IconButton>
+            </Toolbar>
             </AppBar>
             <Box
                 component="nav"

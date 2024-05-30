@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@uiw/codemirror-theme-vscode": "^4.22.1",
     "@uiw/react-codemirror": "^4.22.1",
+    "axios": "^1.7.2",
     "create-react-app": "^5.0.1",
     "http-proxy-middleware": "^3.0.0",
     "react": "^18.3.1",
