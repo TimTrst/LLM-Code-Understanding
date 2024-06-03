@@ -1,9 +1,12 @@
 import os
+import time
+
 from flask import Flask, render_template, request, jsonify
 import datetime
 from compilecode import compile_and_run, save_code_to_file
 
 app = Flask(__name__)
+
 
 @app.route('/')
 @app.route('/index')
@@ -16,11 +19,13 @@ def index():
     }
 
 
-@app.route('/requests')
+@app.route('/requests', methods=['POST'])
 def get_request():
-   return {
-
-   }
+    time.sleep(3)
+    return {
+        'text': "Recursion is beautiful",
+        'user': False
+    }
 
 
 @app.route('/compile', methods=['POST'])
@@ -46,5 +51,4 @@ def compile_code():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8000, debug=True)
-    #serve(app, host="0.0.0.0", port=8000)
-
+    # serve(app, host="0.0.0.0", port=8000)
