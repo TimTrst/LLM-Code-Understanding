@@ -1,19 +1,58 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .first-color {
-	background: #00204a;
+    background: #00204a;
 }
 
 .second-color {
-	background: #005792;
+    background: #005792;
 }
 
 .third-color {
-	background: #00bbf0;
+    background: #00bbf0;
 }
 
 .fourth-color {
+    background: #fdb44b;
+}
+
+.message-user {
+    position: relative;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    width: 60%;
+	padding: 0;
 	background: #fdb44b;
+	&::before {
+		content: '';
+		position: absolute;
+		width: 0;
+		height: 0;
+		bottom: 100%;
+		left: 36rem;
+		border: .75rem solid transparent;
+		border-top: none;
+		border-bottom-color: #fdb44b;
+		filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
+		transform: skewX(-20deg);
+	}
+}
+
+.message-system{
+    position: relative;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    padding: 0;
+    width: 60%;
+	&::before {
+		content: '';
+		position: absolute;
+		width: 0;
+		height: 0;
+		bottom: 100%;
+		left: 1.5em;
+		border: .75rem solid transparent;
+		border-top: none;
+		border-bottom-color: #005792;
+		filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
+		transform: skewX(20deg);
+	}
 }

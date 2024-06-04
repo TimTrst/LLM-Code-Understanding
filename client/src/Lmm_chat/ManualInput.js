@@ -1,6 +1,8 @@
 import React, {useState} from "react"
-import {Button, Card, TextField, Typography} from "@mui/material"
+import {Button, Card, TextField} from "@mui/material"
 import PropTypes from "prop-types"
+import SendIcon from '@mui/icons-material/Send';
+
 
 const ManualInput = ({ onSend }) => {
 
@@ -15,14 +17,13 @@ const ManualInput = ({ onSend }) => {
 
     return (
         <div>
-            <Typography variant={'h4'}> Write your description here</Typography>
-            <Card sx={{height: '10em', bgcolor: "secondary.main", px: 2}}>
-                <TextField id="standard-basic" label=">" variant="standard" multiline fullWidth minRows={1} maxRows={5}
+            <Card sx={{height: '10em', bgcolor: "secondary.main", px: 2, my:3.4}}>
+                <TextField id="standard-basic" label="Enter your questions here" variant="standard" multiline fullWidth minRows={3} maxRows={5}
                            InputProps={{disableUnderline: true}} value = {inputText} onChange={(event) => setInputText(event.target.value)}
                 >
                 </TextField>
+                <Button sx={{marginTop: 2}} variant="contained" onClick={handleSubmitText} startIcon={<SendIcon/>}>Send</Button>
             </Card>
-            <Button sx={{marginTop: 2}} variant="contained" onClick={handleSubmitText}>Generate</Button>
         </div>
     )
 }
