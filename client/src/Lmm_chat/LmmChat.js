@@ -22,7 +22,7 @@ function LmmChat() {
 
             setMessages((prevMessages) => [...prevMessages, { text: "Loading...", user: false }]);
 
-            const response = await axios.post('api/requests', {
+            const response = await axios.post('api/manual-requests', {
                 message: userInput,
             })
 
