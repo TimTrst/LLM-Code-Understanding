@@ -2,7 +2,7 @@ import React from 'react'
 import {Button, Box, Paper} from "@mui/material";
 import PropTypes from "prop-types";
 
-const PromptlessInteraction = ({handlePromptlessRequest, setTopic, setPromptlessTextForChat}) => {
+const PromptlessInteraction = ({handlePromptlessRequest, setPromptlessTextForChat, responseReceived}) => {
 
     const baseButtons= {
         explain: 'Explain',
@@ -22,9 +22,11 @@ const PromptlessInteraction = ({handlePromptlessRequest, setTopic, setPromptless
 
 
     const handleSubmitPrompt = (topic) => {
-        setTopic(topic)
-        setPromptlessTextForChat(basePrompts[topic])
-        handlePromptlessRequest()
+        console.log(responseReceived)
+        if(responseReceived){
+            setPromptlessTextForChat(basePrompts[topic])
+            handlePromptlessRequest(topic)
+        }
     }
 
     return (
@@ -43,8 +45,8 @@ const PromptlessInteraction = ({handlePromptlessRequest, setTopic, setPromptless
 
 PromptlessInteraction.propTypes = {
     handlePromptlessRequest: PropTypes.func.isRequired,
-    setTopic: PropTypes.func.isRequired,
     setPromptlessTextForChat: PropTypes.func.isRequired,
+    responseReceived: PropTypes.bool,
 }
 
 export default PromptlessInteraction

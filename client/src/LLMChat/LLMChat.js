@@ -8,40 +8,46 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import "../App.css"
 import PropTypes from "prop-types";
 
-function LLMChat({ response, promptlessTextForChat } ) {
+function LLMChat({ response, promptlessTextForChat, handleManualRequest, responseReceived } ) {
     const [messages, setMessages] = useState([])
-    const [responseReceived, setResponseReceived] = useState(true)
     const messagesEndRef = useRef(null);
 
-    const handleSend = async (userInput) => {
-        setMessages((prevMessages) => [...prevMessages, { text: userInput, user: true }]);
-
+    const handleSend = async (manualRequest) => {
+        console.log(responseReceived)
         if (!responseReceived) return
 
-        try {
-            setResponseReceived(false)
-
-            setMessages((prevMessages) => [...prevMessages, { text: "Loading...", user: false }]);
-
-            const response = await axios.post('api/manual-requests', {
-                message: userInput,
-            })
-
-            const systemResponse = response.data.text
-
-           setMessages((prevMessages) => {
-                const updatedMessages = prevMessages.filter((msg) => msg.text !== "Loading...");
-                return [...updatedMessages, { text: systemResponse, user: false }];
-            });
-            setResponseReceived(true)
-        } catch (error) {
-            console.log('Error while fetching the API: ', error)
+        if (manualRequest !== ''){
+            addMessageToChat(manualRequest, true)
+            addMessageToChat("Loading...", false)
+            handleManualRequest(manualRequest)
+        }else{
+            handleManualRequest("")
         }
     }
 
-    const handleDelete = () => {
+    function removeLoadingAndAddSystemResponse(message){
+        setMessages((prevMessages) => {
+                const updatedMessages = prevMessages.filter((msg) => msg.text !== "Loading...");
+                return [...updatedMessages, { text: message, user: false }];
+        });
+    }
+
+   function addMessageToChat(message, isUser){
+        setMessages((prevMessages) => [...prevMessages, { text: message, user: isUser }]);
+    }
+
+    const handleDelete = async () => {
+        try{
+            await axios.get('api/delete-context').then(res => {
+            //return a status incase there was a problem with the context delete by chatgpt or my api
+            const deleteStatus = res.data.status
+
+            addMessageToChat(deleteStatus, false)
+        })
+       } catch (error){
+            console.log("There was an error while trying to request the deletion of ChatGpt's context.")
+        }
        setMessages([])
-        //todo: delete the chat session with chatgpt as well?
     }
 
     const scrollToBottom = () => {
@@ -50,15 +56,14 @@ function LLMChat({ response, promptlessTextForChat } ) {
 
     useEffect(() => {
         if(promptlessTextForChat !== ""){
-            setMessages((prevMessages) => [...prevMessages, { text: promptlessTextForChat, user: true }])
+            addMessageToChat(promptlessTextForChat, true)
+            addMessageToChat("Loading...", false)
         }
     }, [promptlessTextForChat]);
 
     useEffect(() => {
-        console.log(response)
-
         if(Object.keys(response).length !== 0){
-            setMessages((prevMessages) => [...prevMessages, { text: response['text'], user: false }])
+             removeLoadingAndAddSystemResponse(response['text'])
         }
     }, [response]);
 
@@ -95,7 +100,9 @@ function LLMChat({ response, promptlessTextForChat } ) {
 
 LLMChat.propTypes = {
   response: PropTypes.object,
-  promptlessTextForChat: PropTypes.string,
+    handleManualRequest: PropTypes.func.isRequired,
+    promptlessTextForChat: PropTypes.string,
+    responseReceived: PropTypes.bool,
 };
 
 export default LLMChat;

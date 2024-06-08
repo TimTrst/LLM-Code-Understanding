@@ -1,22 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, { useState} from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import {vscodeDark} from "@uiw/codemirror-theme-vscode";
 import {javascript} from "@codemirror/lang-javascript";
 import {python} from "@codemirror/lang-python";
 import {java} from "@codemirror/lang-java";
 import {MenuItem, Paper, Select} from "@mui/material";
-import initialCode from "./initialCode";
 import PropTypes from "prop-types";
 
-function Ide({ setInputCode }) {
-    const [code, setCode] = useState('');
+function Ide({inputCode, setInputCode}) {
     const [language, setLanguage] = useState("python");
-
-    useEffect(() => {
-        // Set the initial code when the component mounts
-        setCode(initialCode)
-    }, []);
-
 
     // Language extensions based on the selected language
     const languageExtensions = {
@@ -46,15 +38,15 @@ function Ide({ setInputCode }) {
     */
     return (
         <div>
-            <Select sx={{ color:"white", backgroundColor:"secondary.main" }}
+            <Select sx={{color: "white", backgroundColor: "secondary.main"}}
                     onChange={handleLanguageChange}
                     value={language}
             >
                 <MenuItem value="python">Python</MenuItem>
             </Select>
-            <Paper elevation={3} sx = {{my: 2, px: 4, py: 4, backgroundColor: "fourthColor.main"}}>
+            <Paper elevation={3} sx={{my: 2, px: 4, py: 4, backgroundColor: "fourthColor.main"}}>
                 <CodeMirror
-                    value={code}
+                    value={inputCode}
                     height="500px"
                     theme={vscodeDark}
                     extensions={[languageExtensions[language]({})]}
@@ -64,7 +56,9 @@ function Ide({ setInputCode }) {
         </div>
     );
 }
+
 Ide.propTypes = {
-  setInputCode: PropTypes.func.isRequired,
+    inputCode: PropTypes.string,
+    setInputCode: PropTypes.func.isRequired,
 };
 export default Ide;

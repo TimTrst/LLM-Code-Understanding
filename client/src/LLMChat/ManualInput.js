@@ -10,7 +10,6 @@ const ManualInput = ({ onSend }) => {
 
     const handleSubmitText = (e) => {
         e.preventDefault();
-        if (inputText.trim() === '') return
         onSend(inputText)
         setInputText('')
     }
@@ -18,7 +17,7 @@ const ManualInput = ({ onSend }) => {
     return (
         <div>
             <Card sx={{height: '10em', bgcolor: "secondary.main", px: 2, my:3.4}}>
-                <TextField id="standard-basic" label="Enter your questions here" variant="standard" multiline fullWidth minRows={3} maxRows={5}
+                <TextField id="standard-basic" label="Enter your questions here" variant="standard" multiline fullWidth minRows={3} maxRows={3}
                            InputProps={{disableUnderline: true}} value = {inputText} onChange={(event) => setInputText(event.target.value)}
                 >
                 </TextField>

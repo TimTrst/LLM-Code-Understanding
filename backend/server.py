@@ -19,9 +19,12 @@ def index():
     }
 
 
-@app.route('/manual-requests', methods=['POST'])
+@app.route('/manual-prompts', methods=['POST'])
 def get_manual_request():
-    time.sleep(3)
+    time.sleep(2)
+    user_question = request.json['manualTopic']
+    user_input = request.json['inputCode']
+
     return {
         'text': "Recursion is beautiful",
         'user': False
@@ -29,7 +32,7 @@ def get_manual_request():
 
 @app.route('/explain-prompts', methods=['POST'])
 def explain_prompts():
-    topic = request.json['topic']
+    topic = request.json['promptlessTopic']
     user_input = request.json['inputCode']
 
     prompt = ""
@@ -90,6 +93,13 @@ def create_prompt(user_input, misconceptions):
 
     combined_prompt = "\n\n".join(prompts)
     return combined_prompt
+
+@app.route('/delete-context', methods=['GET'])
+def delete_context():
+
+    return {
+        'status': 'success',
+    }
 
 
 @app.route('/compile', methods=['POST'])

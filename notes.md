@@ -116,3 +116,4 @@ Section 5: Updating Variables in Recursion
 7. VU1: How do variable updates in recursion work?
     A. Variables updated before the recursive call affect all recursive calls.
     B. Each recursive call gets its own copy of the variables.
+
