@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import {Button, Card, TextField} from "@mui/material"
 import PropTypes from "prop-types"
-import SendIcon from '@mui/icons-material/Send';
+import SendIcon from '@mui/icons-material/Send'
 
 
 const ManualInput = ({ onSend }) => {
@@ -32,4 +32,4 @@ ManualInput.propTypes = {
   onSend: PropTypes.func.isRequired,
 };
 
-export default ManualInput;
+export default ManualInput

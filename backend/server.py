@@ -30,7 +30,7 @@ def get_manual_request():
 @app.route('/explain-prompts', methods=['POST'])
 def explain_prompts():
     topic = request.json['topic']
-    user_input = request.json['input']
+    user_input = request.json['inputCode']
 
     prompt = ""
 
@@ -50,6 +50,8 @@ def explain_prompts():
         prompt = f"Provide guidance on writing base cases in recursion using the following example:\n{user_input}"
     elif topic == "variableUpdates":
         prompt = f"Explain how variable updates work in recursion using the following example:\n{user_input}"
+
+    time.sleep(2)
 
     response = {
         'text': 'Another cute recursion text to output to my beautiful web interface'

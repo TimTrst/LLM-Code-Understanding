@@ -6,8 +6,9 @@ import axios from 'axios'
 import ListItemText from "@mui/material/ListItemText"
 import DeleteIcon from '@mui/icons-material/Delete'
 import "../App.css"
+import PropTypes from "prop-types";
 
-function LmmChat() {
+function LLMChat({ response, promptlessTextForChat } ) {
     const [messages, setMessages] = useState([])
     const [responseReceived, setResponseReceived] = useState(true)
     const messagesEndRef = useRef(null);
@@ -40,12 +41,26 @@ function LmmChat() {
 
     const handleDelete = () => {
        setMessages([])
-        //todo: delete the chat session with chatgpt aswell?
+        //todo: delete the chat session with chatgpt as well?
     }
 
     const scrollToBottom = () => {
         messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight
     }
+
+    useEffect(() => {
+        if(promptlessTextForChat !== ""){
+            setMessages((prevMessages) => [...prevMessages, { text: promptlessTextForChat, user: true }])
+        }
+    }, [promptlessTextForChat]);
+
+    useEffect(() => {
+        console.log(response)
+
+        if(Object.keys(response).length !== 0){
+            setMessages((prevMessages) => [...prevMessages, { text: response['text'], user: false }])
+        }
+    }, [response]);
 
     useEffect(() => {
         scrollToBottom();
@@ -78,4 +93,9 @@ function LmmChat() {
     );
 }
 
-export default LmmChat;
+LLMChat.propTypes = {
+  response: PropTypes.object,
+  promptlessTextForChat: PropTypes.string,
+};
+
+export default LLMChat;
