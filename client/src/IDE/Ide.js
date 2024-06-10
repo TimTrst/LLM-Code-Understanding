@@ -21,21 +21,10 @@ function Ide({inputCode, setInputCode}) {
         setLanguage(event.target.value)
     }
 
-    const handleCodeChange = (event) => {
-        setInputCode(event.target.value)
+    const handleCodeChange = (value) => {
+        setInputCode(value)
     }
 
-    /*
-    const handleCompile = async () => {
-        try {
-            const response = await axios.post('api/compile', { code, language });
-            setOutput(response.data.output || response.data.errors);
-            //response.data.status === "success" ? setIsCompilable(true) : setIsCompilable(false)
-        } catch (error) {
-            setOutput('Error communicating with the server');
-        }
-    };
-    */
     return (
         <div>
             <Select sx={{color: "white", backgroundColor: "secondary.main"}}

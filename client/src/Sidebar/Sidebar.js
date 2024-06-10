@@ -15,11 +15,11 @@ import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
+import {Typography} from "@mui/material";
 
 const drawerWidth = 240;
 
-function Sidebar(props) {
-    const {window} = props;
+function Sidebar({window, feedback}) {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
 
@@ -66,6 +66,15 @@ function Sidebar(props) {
                         </ListItemButton>
                     </ListItem>
                 ))}
+            </List>
+            <Divider/>
+            <Typography>
+                Parameters
+            </Typography>
+            <List>
+               <ListItem >
+                    <Typography>Understanding: {feedback}</Typography>
+                </ListItem>
             </List>
         </div>
     );
@@ -138,11 +147,8 @@ function Sidebar(props) {
 }
 
 Sidebar.propTypes = {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * Remove this when copying and pasting into your project.
-     */
     window: PropTypes.func,
-};
+    feedback:PropTypes.number,
+}
 
 export default Sidebar;

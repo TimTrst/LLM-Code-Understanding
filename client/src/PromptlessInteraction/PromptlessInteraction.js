@@ -1,10 +1,18 @@
-import React from 'react'
-import {Button, Box, Paper} from "@mui/material";
-import PropTypes from "prop-types";
+import React, {useState} from "react"
+import {Button, Box, Paper} from "@mui/material"
+import PropTypes from "prop-types"
+import FeedbackSlider from "./FeedbackSlider"
 
-const PromptlessInteraction = ({handlePromptlessRequest, setPromptlessTextForChat, responseReceived}) => {
+const PromptlessInteraction = ({
+                                   handlePromptlessRequest,
+                                   setPromptlessTextForChat,
+                                   responseReceived,
+                                   setFeedback
+                               }) => {
 
-    const baseButtons= {
+    const [questionAsked, setQuestionAsked] = useState(false)
+
+    const baseButtons = {
         explain: 'Explain',
         line_by_line: 'Line-By-Line',
         key_concepts: 'Key-Concepts',
@@ -22,24 +30,25 @@ const PromptlessInteraction = ({handlePromptlessRequest, setPromptlessTextForCha
 
 
     const handleSubmitPrompt = (topic) => {
-        console.log(responseReceived)
-        if(responseReceived){
+        setQuestionAsked(true)
+        if (responseReceived) {
             setPromptlessTextForChat(basePrompts[topic])
             handlePromptlessRequest(topic)
         }
     }
 
     return (
-        <Paper elevation={3} sx={{my:2, py:2, px:1}}>
-            <Box spacing={2} sx={{textAlign:'left'}}>
+        <Paper elevation={3} sx={{my: 2, py: 2, px: 1}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
                 {
                     Object.entries(baseButtons).map(([key, value]) => {
-                       return <Button key={key} variant="contained" sx={{mx: 2}}
-                                      onClick={() => handleSubmitPrompt(key)}>{value}
-                       </Button>
+                        return <Button key={key} variant="contained" sx={{mx: 2}}
+                                       onClick={() => handleSubmitPrompt(key)}>{value}
+                        </Button>
                     })
                 }
             </Box>
+            {questionAsked && <FeedbackSlider setFeedback={setFeedback} />}
         </Paper>)
 }
 
@@ -47,6 +56,7 @@ PromptlessInteraction.propTypes = {
     handlePromptlessRequest: PropTypes.func.isRequired,
     setPromptlessTextForChat: PropTypes.func.isRequired,
     responseReceived: PropTypes.bool,
+    setFeedback: PropTypes.func,
 }
 
 export default PromptlessInteraction

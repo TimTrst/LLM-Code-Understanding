@@ -4,13 +4,13 @@ import PropTypes from "prop-types"
 import SendIcon from '@mui/icons-material/Send'
 
 
-const ManualInput = ({ onSend }) => {
+const ManualInput = ({ handleManualSend }) => {
 
     const [inputText, setInputText] = useState("")
 
     const handleSubmitText = (e) => {
         e.preventDefault();
-        onSend(inputText)
+        handleManualSend(inputText)
         setInputText('')
     }
 
@@ -28,7 +28,7 @@ const ManualInput = ({ onSend }) => {
 }
 
 ManualInput.propTypes = {
-  onSend: PropTypes.func.isRequired,
-};
+  handleManualSend: PropTypes.func.isRequired,
+}
 
 export default ManualInput
