@@ -126,7 +126,7 @@ function App() {
             <Sidebar feedback={feedback}/>
             <Container sx={{ display: 'flex', flexDirection: 'column', height: '100%', mt: 10 }}>
                 <Typography variant="h1" sx={{ my: 4, textAlign: 'center', color: 'primary.main' }}>
-                    Code Understanding
+                    Recursive Code Understanding
                 </Typography>
                 <Ide inputCode={inputCode} setInputCode={setInputCode} />
                 <PromptlessInteraction

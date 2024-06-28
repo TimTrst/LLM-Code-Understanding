@@ -16,7 +16,7 @@ const PromptlessInteraction = ({
         explain: 'Explain',
         line_by_line: 'Line-By-Line',
         key_concepts: 'Key-Concepts',
-        misconceptions: 'Misconceptions',
+        example: 'Example',
         optimization: 'Optimization'
     }
 
@@ -24,7 +24,7 @@ const PromptlessInteraction = ({
         explain: 'Explain the following recursive problem',
         line_by_line: 'Provide a step-by-step explanation for the following problem',
         key_concepts: 'Explain and Highlight the Key-Concepts of the given problem.',
-        misconceptions: 'Explain the following problem and highlight common misconceptions.',
+        example: 'Explain by showing an easy to understand, real life example.',
         optimization: 'How can this code be optimized. Show an iterative equivalent. Which is more efficient?'
     }
 

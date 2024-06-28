@@ -3,6 +3,8 @@ import time
 from flask import Flask, render_template, request, jsonify
 import datetime
 from compilecode import compile_and_run, save_code_to_file, check_if_compilable
+from checkinput import validate_input
+from create_prompts import base_prompts
 
 app = Flask(__name__)
 
@@ -24,8 +26,7 @@ def get_manual_request():
     user_question = request.json['manualTopic']
     user_input = request.json['inputCode']
 
-    if not user_input:
-        return jsonify({'error': 'Code required'}), 400
+    validate_input(user_input, user_question)
 
     compilation_result = check_if_compilable(user_input)
 
@@ -47,20 +48,22 @@ def explain_prompts():
     feedback = request.json['feedback']
     feedback_string = ""
 
-    if not user_input:
-        return jsonify({'error': 'Code required'}), 400
+    validate_input(user_input, topic)
 
     compilation_result = check_if_compilable(user_input)
 
     if 'error' in compilation_result:
         return jsonify(compilation_result)
-    print(feedback)
 
     if feedback != 0:
         feedback_string = (
-            f"The User rated your last response in terms of understandability on a scale from 1 to 10. 1 "
-            f"means i did not understand at all and 10 means i understood fully. Adjust the response "
-            f"accordingly. User Rating: {feedback}")
+            f"The User rated your last response in terms of understandability on a scale from 1 to 5. 1 "
+            f"means i did not understand at all and 5 means i understood fully. Adjust the next response "
+            f"accordingly. User Rating: {feedback}.")
+
+    prompt_config = base_prompts(topic, user_input, feedback_string)
+
+    print(prompt_config)
 
     time.sleep(2)
 

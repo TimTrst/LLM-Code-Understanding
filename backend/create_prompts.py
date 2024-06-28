@@ -1,3 +1,54 @@
+def base_prompts(topic, user_input, feedback):
+    prompt_config = ""
+
+    if topic == "example":
+        prompt_config = {
+            "prompt": ("I have a recursive problem. Show an easier to understand, similar example based on the same "
+                       "concept. You are explaining to a novice. Show how this could be used in a real world setting. "
+                       "Leave out the introduction part and start with the explanation straight away. ") + feedback +
+                       " Code: ``` " + user_input + " ```",
+            "temperature": 0.7,
+            "max_tokens": 250,
+        }
+    elif topic == "explain":
+        prompt_config = {
+            "prompt": ("Explain the following recursive problem to a beginner. Focus on a general, easy to understand "
+                       "explanation of the problem. It should be clear where the recursion occurs and how it "
+                       "calculates the result. Do not be too specific about individual parts, but explain the whole "
+                       "concept using the provided code example. "
+                       "Leave out the introduction part and start with the explanation straight away. ") + feedback +
+                        " Code: ``` " + user_input + " ```",
+            "temperature": 0.3,
+            "max_tokens": 300,
+        }
+    elif topic == "line-by-line":
+        prompt_config = {
+            "prompt": ("I have a recursive problem. Show an easier to understand, similar example based on the same "
+                       "concept. You are explaining to a novice, show how this could be used in a real world setting. "
+                       "Leave out the introduction part and start with the explanation straight away. ") + feedback,
+            "temperature": 0.2,
+            "max_tokens": 200,
+        }
+    elif topic == "key_concepts":
+        prompt_config = {
+            "prompt": ("I have a recursive problem. Show an easier to understand, similar example based on the same "
+                       "concept. You are explaining to a novice, show how this could be used in a real world setting. "
+                       "Leave out the introduction part and start with the explanation straight away. ") + feedback,
+            "temperature": 0.3,
+            "max_tokens": 250,
+        }
+    elif topic == "optimization":
+        prompt_config = {
+            "prompt": ("I have a recursive problem. Show an easier to understand, similar example based on the same "
+                       "concept. You are explaining to a novice, show how this could be used in a real world setting. "
+                       "Leave out the introduction part and start with the explanation straight away. ") + feedback,
+            "temperature": 0.2,
+            "max_tokens": 200,
+        }
+
+    return prompt_config
+
+
 def misconceptions_prompts(topic, user_input):
     prompt = ""
 
@@ -17,6 +68,7 @@ def misconceptions_prompts(topic, user_input):
         prompt = f"Provide guidance on writing base cases in recursion using the following example:\n{user_input}"
     elif topic == "variableUpdates":
         prompt = f"Explain how variable updates work in recursion using the following example:\n{user_input}"
+
 
 def dynamic_prompts(user_inputs, misconceptions):
     # when the user makes the quiz

@@ -79,7 +79,6 @@ function Sidebar({window, feedback}) {
         </div>
     );
 
-    // Remove this const when copying and pasting into your project.
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
@@ -109,7 +108,6 @@ function Sidebar({window, feedback}) {
                 sx={{width: {sm: drawerWidth}, flexShrink: {sm: 0}}}
                 aria-label="nav-options"
             >
-                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
                 <Drawer
                     container={container}
                     variant="temporary"
