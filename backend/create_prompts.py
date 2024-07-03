@@ -3,57 +3,76 @@ def base_prompts(topic, user_input, feedback):
     temperature = 0
     max_tokens = 0
 
+    print(topic)
+
     # conscructing the sub prompts (key-concepts)
     # Subprompts are the core of the prompt
     # todo: see if explanations are core heavy or drift from actual explanations through too heavy template prompt
     if topic == "example":
         sub_prompt = (
             "Provide a real-world analogy for the following recursive code snippet. Explain how the recursive process "
-            "in the code is similar to a real-world situation, making it easier for a novice programmer to "
-            "understand. "),
-        temperature = 0.7,
-        max_tokens = 200,
+            "in the code is similar to a real-world situation, making it easier for a novice programmer to understand. "
+        )
+        temperature = 0.7
+        max_tokens = 700
 
     elif topic == "explain":
-        sub_prompt = ("Focus on a general, easy to understand explanation of the problem. Do not be too specific about "
-                      "individual parts, but explain the whole concept using the provided code example. "),
-        temperature = 0.3,
-        max_tokens = 250,
-
-    elif topic == "line-by-line":
         sub_prompt = (
-                "Please provide a detailed, line-by-line explanation of the following recursive code snippet. Each "
-                "line of code should be explained clearly, including the purpose of the line, "
-                "how it contributes to the recursion, and any important concepts or terms. ")
-        temperature = 0.2
-        max_tokens = 150
+            "Focus on a general, easy to understand explanation of the problem. Do not be too specific about individual parts, "
+            "but explain the whole concept using the provided code example. "
+        )
+        temperature = 0.3
+        max_tokens = 700
 
-    elif topic == "iterative-comparison":
-        sub_prompt = ("Compare the following recursive code snippet with its iterative equivalent. Explain the "
-                      "differences in approach, performance, and readability. Provide both versions of the code."),
-        temperature = 0.3,
-        max_tokens = 250,
+    elif topic == "line_by_line":
+        sub_prompt = (
+            "Please provide a detailed, line-by-line explanation of the following recursive code snippet. Each line of code "
+            "should be explained clearly, including the purpose of the line, how it contributes to the recursion, and any important "
+            "concepts or terms. "
+        )
+        temperature = 0.2
+        max_tokens = 700
+
+    elif topic == "iterative_comparison":
+        sub_prompt = (
+            "Compare the following recursive code snippet with its iterative equivalent. Explain the differences in approach, "
+            "performance, and readability. Provide both versions of the code."
+        )
+        temperature = 0.3
+        max_tokens = 700
 
     elif topic == "optimization":
-        sub_prompt = ("Explain how the following recursive code snippet can be optimized. Discuss potential "
-                      "improvements and provide an optimized version of the code. "),
-        temperature = 0.2,
-        max_tokens = 200,
+        sub_prompt = (
+            "Explain how the following recursive code snippet can be optimized. Discuss potential improvements and provide an optimized "
+            "version of the code."
+        )
+        temperature = 0.2
+        max_tokens = 700
 
-    # Construct the full prompt
+        # Construct the full prompt
     prompt_config = {
         "prompt": (
-                "Explain the following recursive problem in a manner suitable for a novice programmer learning about "
-                "recursion. "
+                "Explain the following recursive problem in a manner suitable for a novice programmer learning about recursion. "
                 + sub_prompt +
-                "Describe the inputs and outputs of the program. Additionally, highlight the base case and recursive "
-                "case, and explain how the recursive calls work with a visual representation of the call stack's "
-                "active and passive flow. "
+                " Describe the inputs and outputs of the program. Additionally, highlight the base case and recursive case, and explain "
+                "how the recursive calls work with a visual representation of the call stack's active and passive flow. "
                 + feedback +
                 " Code: ``` " + user_input + " ```"
         ),
         "temperature": temperature,
         "max_tokens": max_tokens,
+    }
+
+    return prompt_config
+
+
+def manual_prompt(user_question, user_input):
+    max_tokens = 500
+
+    prompt_config = {
+        "prompt": user_question,
+        "max_tokens": max_tokens,
+        "temperature": 0.6
     }
 
     return prompt_config

@@ -6,6 +6,8 @@ import ListItemText from "@mui/material/ListItemText"
 import DeleteIcon from '@mui/icons-material/Delete'
 import "../App.css"
 import PropTypes from "prop-types";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 function LLMChat({response, promptlessTextForChat, handleManualRequest, responseReceived, requestFailed, handleDelete}) {
     const [messages, setMessages] = useState([])
@@ -64,9 +66,9 @@ function LLMChat({response, promptlessTextForChat, handleManualRequest, response
     }, [messages]);
 
     return (
-        <Paper elevation={3} sx={{height: '48em', my: 4, py: 2, px: 2, bgcolor: "fourthColor.main"}}>
-            <Card sx={{height: '30em', my: 2, py: 2, px: 2, bgcolor: "secondary.main"}}>
-                <List ref={messagesEndRef} sx={{maxHeight: 460, overflowY: 'auto'}}>
+        <Paper elevation={3} sx={{height: '59em', my: 4, py: 2, px: 2, bgcolor: "fourthColor.main"}}>
+            <Card sx={{height: '40em', my: 2, py: 2, px: 2, bgcolor: "secondary.main"}}>
+                <List ref={messagesEndRef} sx={{maxHeight: 600, overflowY: 'auto'}}>
                     {messages.map((message, index) => (
                         <ListItem key={index} sx={{paddingLeft: 0}}>
                             <Paper className={message.user ? "message-user" : "message-system"} elevation={2}
@@ -75,10 +77,15 @@ function LLMChat({response, promptlessTextForChat, handleManualRequest, response
                                        bgcolor: message.user ? "fourthColor.main" : "primary.main",
                                        marginLeft: message.user ? 'auto' : 'none'
                                    }}>
+                                {message.user ?
                                 <ListItemText
                                     primary={message.text}
                                     sx={{textAlign: message.user ? 'right' : 'left'}}
-                                />
+                                /> :
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {message.text}
+                                </ReactMarkdown>
+                                }
                             </Paper>
                         </ListItem>
                     ))}

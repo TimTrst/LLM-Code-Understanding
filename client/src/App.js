@@ -84,7 +84,7 @@ function App() {
             console.log('Error fetching the data:', error)
             setResponseReceived(true)
         }
-    }, [checkRequest, inputCode, feedback])
+    }, [checkRequest, inputCode, feedback, isValidResponse])
 
     // API request for "manual" requests to chatgpt (user can chat with own prompts)
     const handleManualRequest = useCallback(async (manualTopic) => {
@@ -94,7 +94,7 @@ function App() {
                 setResponseReceived(false)
                 const requestResponse = await axios.post('api/manual-prompts', { manualTopic, inputCode })
                 setResponseReceived(true)
-                if(isValidResponse(requestResponse)){
+                if(isValidResponse(requestResponse.data)){
                     setResponse(requestResponse.data)
                 }
             }
@@ -102,7 +102,7 @@ function App() {
             console.log('Error fetching the data:', error)
             setResponseReceived(true)
         }
-    }, [checkRequest, inputCode])
+    }, [checkRequest, inputCode, isValidResponse])
 
     // API request to clear the context/history of the current conversation with chatgpt
     const handleDelete = useCallback(async () => {

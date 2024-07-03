@@ -1,12 +1,16 @@
 import time
-
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 import datetime
-from compilecode import compile_and_run, save_code_to_file, check_if_compilable
-from checkinput import validate_input
-from create_prompts import base_prompts
+from compilecode import check_if_compilable
+from checkinput import validate_input, add_feedback
+from create_prompts import base_prompts, manual_prompt
+from llm import make_chatgpt_request
+from config import Config
 
 app = Flask(__name__)
+
+app.config.from_object(Config)
+
 
 
 @app.route('/')
@@ -33,12 +37,14 @@ def get_manual_request():
     if 'error' in compilation_result:
         return jsonify(compilation_result)
 
-    response = {
-        'text': "Recursion is beautiful",
-        'user': False
-    }
+    # general prompt config with the full prompt, the temperature and max. token length in responses
+    prompt_config = manual_prompt(user_question, user_input)
 
-    return jsonify(response)
+    # make the chatgpt request
+    response = make_chatgpt_request(prompt_config)
+
+    # return the response to the frontend
+    return response
 
 
 @app.route('/explain-prompts', methods=['POST'])
@@ -46,37 +52,27 @@ def explain_prompts():
     topic = request.json['promptlessTopic']
     user_input = request.json['inputCode']
     feedback = request.json['feedback']
-    feedback_string = ""
 
+    # check if both code and a prompt exist
     validate_input(user_input, topic)
 
+    # compile the result to avoid unnecessary api calls
     compilation_result = check_if_compilable(user_input)
 
     if 'error' in compilation_result:
         return jsonify(compilation_result)
 
-    if feedback != 0:
-        feedback_string = (
-            f"The User rated your last response in terms of understandability on a scale from 1 to 5. 1 "
-            f"means i did not understand at all and 5 means i understood fully. Adjust the next response "
-            f"accordingly. User Rating: {feedback}.")
+    # if feedback was given by the user then add it here
+    feedback_string = add_feedback(feedback)
 
+    # general prompt config with the full prompt, the temperature and max. token length in responses
     prompt_config = base_prompts(topic, user_input, feedback_string)
 
-    print(prompt_config)
+    # make the chatgpt request
+    response = make_chatgpt_request(prompt_config)
 
-    time.sleep(2)
-
-    response = {
-        'text': 'Another cute recursion text to output to my beautiful web interface'
-    }
-    # response = openai.Completion.create(
-    #    engine="text-davinci-003",
-    #    prompt=prompt,
-    #   max_tokens=150
-    # )
-    return jsonify(response)
-    # return jsonify(response.choices[0].text.strip())
+    # return the response to the frontend
+    return response
 
 
 @app.route('/delete-context', methods=['GET'])
