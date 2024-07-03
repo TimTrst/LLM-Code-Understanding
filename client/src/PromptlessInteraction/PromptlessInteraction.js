@@ -15,7 +15,7 @@ const PromptlessInteraction = ({
     const baseButtons = {
         explain: 'Explain',
         line_by_line: 'Line-By-Line',
-        key_concepts: 'Key-Concepts',
+        iterative_comparison: 'Iterative-Comparison',
         example: 'Example',
         optimization: 'Optimization'
     }
@@ -23,7 +23,7 @@ const PromptlessInteraction = ({
     const basePrompts = {
         explain: 'Explain the following recursive problem',
         line_by_line: 'Provide a step-by-step explanation for the following problem',
-        key_concepts: 'Explain and Highlight the Key-Concepts of the given problem.',
+        iterative_comparison: 'Compare the following recursive code with its iterative equivalent.',
         example: 'Explain by showing an easy to understand, real life example.',
         optimization: 'How can this code be optimized. Show an iterative equivalent. Which is more efficient?'
     }

@@ -1,50 +1,60 @@
 def base_prompts(topic, user_input, feedback):
-    prompt_config = ""
+    sub_prompt = ""
+    temperature = 0
+    max_tokens = 0
 
+    # conscructing the sub prompts (key-concepts)
+    # Subprompts are the core of the prompt
+    # todo: see if explanations are core heavy or drift from actual explanations through too heavy template prompt
     if topic == "example":
-        prompt_config = {
-            "prompt": ("I have a recursive problem. Show an easier to understand, similar example based on the same "
-                       "concept. You are explaining to a novice. Show how this could be used in a real world setting. "
-                       "Leave out the introduction part and start with the explanation straight away. ") + feedback +
-                       " Code: ``` " + user_input + " ```",
-            "temperature": 0.7,
-            "max_tokens": 250,
-        }
+        sub_prompt = (
+            "Provide a real-world analogy for the following recursive code snippet. Explain how the recursive process "
+            "in the code is similar to a real-world situation, making it easier for a novice programmer to "
+            "understand. "),
+        temperature = 0.7,
+        max_tokens = 200,
+
     elif topic == "explain":
-        prompt_config = {
-            "prompt": ("Explain the following recursive problem to a beginner. Focus on a general, easy to understand "
-                       "explanation of the problem. It should be clear where the recursion occurs and how it "
-                       "calculates the result. Do not be too specific about individual parts, but explain the whole "
-                       "concept using the provided code example. "
-                       "Leave out the introduction part and start with the explanation straight away. ") + feedback +
-                        " Code: ``` " + user_input + " ```",
-            "temperature": 0.3,
-            "max_tokens": 300,
-        }
+        sub_prompt = ("Focus on a general, easy to understand explanation of the problem. Do not be too specific about "
+                      "individual parts, but explain the whole concept using the provided code example. "),
+        temperature = 0.3,
+        max_tokens = 250,
+
     elif topic == "line-by-line":
-        prompt_config = {
-            "prompt": ("I have a recursive problem. Show an easier to understand, similar example based on the same "
-                       "concept. You are explaining to a novice, show how this could be used in a real world setting. "
-                       "Leave out the introduction part and start with the explanation straight away. ") + feedback,
-            "temperature": 0.2,
-            "max_tokens": 200,
-        }
-    elif topic == "key_concepts":
-        prompt_config = {
-            "prompt": ("I have a recursive problem. Show an easier to understand, similar example based on the same "
-                       "concept. You are explaining to a novice, show how this could be used in a real world setting. "
-                       "Leave out the introduction part and start with the explanation straight away. ") + feedback,
-            "temperature": 0.3,
-            "max_tokens": 250,
-        }
+        sub_prompt = (
+                "Please provide a detailed, line-by-line explanation of the following recursive code snippet. Each "
+                "line of code should be explained clearly, including the purpose of the line, "
+                "how it contributes to the recursion, and any important concepts or terms. ")
+        temperature = 0.2
+        max_tokens = 150
+
+    elif topic == "iterative-comparison":
+        sub_prompt = ("Compare the following recursive code snippet with its iterative equivalent. Explain the "
+                      "differences in approach, performance, and readability. Provide both versions of the code."),
+        temperature = 0.3,
+        max_tokens = 250,
+
     elif topic == "optimization":
-        prompt_config = {
-            "prompt": ("I have a recursive problem. Show an easier to understand, similar example based on the same "
-                       "concept. You are explaining to a novice, show how this could be used in a real world setting. "
-                       "Leave out the introduction part and start with the explanation straight away. ") + feedback,
-            "temperature": 0.2,
-            "max_tokens": 200,
-        }
+        sub_prompt = ("Explain how the following recursive code snippet can be optimized. Discuss potential "
+                      "improvements and provide an optimized version of the code. "),
+        temperature = 0.2,
+        max_tokens = 200,
+
+    # Construct the full prompt
+    prompt_config = {
+        "prompt": (
+                "Explain the following recursive problem in a manner suitable for a novice programmer learning about "
+                "recursion. "
+                + sub_prompt +
+                "Describe the inputs and outputs of the program. Additionally, highlight the base case and recursive "
+                "case, and explain how the recursive calls work with a visual representation of the call stack's "
+                "active and passive flow. "
+                + feedback +
+                " Code: ``` " + user_input + " ```"
+        ),
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+    }
 
     return prompt_config
 
