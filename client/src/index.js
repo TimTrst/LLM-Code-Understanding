@@ -65,6 +65,7 @@ const theme = createTheme({
             }
         },
         typography: {
+            fontFamily: "'Courier New', Courier, monospace",
             h1: {
                 fontSize: "3rem",
                 fontWeight: "600",
