@@ -5,7 +5,7 @@ def base_prompts(topic, user_input, feedback):
 
     print(topic)
 
-    # conscructing the sub prompts (key-concepts)
+    # constructing the sub prompts (key-concepts)
     # Subprompts are the core of the prompt
     # todo: see if explanations are core heavy or drift from actual explanations through too heavy template prompt
     if topic == "example":
@@ -67,7 +67,7 @@ def base_prompts(topic, user_input, feedback):
 
 
 def manual_prompt(user_question, user_input):
-    max_tokens = 500
+    max_tokens = 800
 
     prompt_config = {
         "prompt": user_question,

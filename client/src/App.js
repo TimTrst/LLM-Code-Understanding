@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Ide from './IDE/Ide';
-import Sidebar from './Sidebar/Sidebar';
+//import Sidebar from './Sidebar/Sidebar';
 import LLMChat from './LLMChat/LLMChat';
 import { Container, Typography } from '@mui/material';
 import PromptlessInteraction from './PromptlessInteraction/PromptlessInteraction';
@@ -123,10 +123,10 @@ function App() {
 
     return (
         <div className="App" style={{ display: 'flex', flexDirection: 'row' }}>
-            <Sidebar feedback={feedback}/>
+            {/*<Sidebar feedback={feedback}/>*/}
             <Container sx={{ display: 'flex', flexDirection: 'column', height: '100%', mt: 10 }}>
-                <Typography variant="h1" sx={{ my: 4, textAlign: 'center', color: 'primary.main' }}>
-                    Recursive Code Understanding
+                <Typography variant="h1" sx={{ my: 4, textAlign: 'center', color: 'secondary.main' }}>
+                    Promptelix
                 </Typography>
                 <Ide inputCode={inputCode} setInputCode={setInputCode} />
                 <PromptlessInteraction

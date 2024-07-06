@@ -38,11 +38,12 @@ const PromptlessInteraction = ({
     }
 
     return (
-        <Paper elevation={3} sx={{my: 2, py: 2, px: 1}}>
+        <Paper className={"paper-shadow-depth"} elevation={3} sx={{my: 2, py: 2, px: 1, backgroundColor: "fourthColor.main"}}>
+
             <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
                 {
                     Object.entries(baseButtons).map(([key, value]) => {
-                        return <Button key={key} variant="contained" sx={{mx: 2}}
+                        return <Button key={key} variant="contained" sx={{mx: 2, backgroundColor: "secondary.main", border: "7px outset black"}}
                                        onClick={() => handleSubmitPrompt(key)}>{value}
                         </Button>
                     })

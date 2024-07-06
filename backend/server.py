@@ -26,12 +26,16 @@ def index():
 
 @app.route('/manual-prompts', methods=['POST'])
 def get_manual_request():
-    time.sleep(2)
     user_question = request.json['manualTopic']
     user_input = request.json['inputCode']
 
-    validate_input(user_input, user_question)
+    is_valid = validate_input(user_input, user_question)
 
+    if not is_valid:
+        return jsonify({
+            'error': 'Input missing',
+            'output': 'Question or Code missing'
+        })
     compilation_result = check_if_compilable(user_input)
 
     if 'error' in compilation_result:
@@ -54,9 +58,15 @@ def explain_prompts():
     feedback = request.json['feedback']
 
     # check if both code and a prompt exist
-    validate_input(user_input, topic)
+    is_valid = validate_input(user_input, topic)
 
-    # compile the result to avoid unnecessary api calls
+    if not is_valid:
+        return jsonify({
+            'error': 'Input missing',
+            'output': 'Question or Code missing'
+        })
+
+    # compile the code to avoid empty, unnecessary api calls
     compilation_result = check_if_compilable(user_input)
 
     if 'error' in compilation_result:
@@ -75,6 +85,7 @@ def explain_prompts():
     return response
 
 
+# todo
 @app.route('/delete-context', methods=['GET'])
 def delete_context():
     return {

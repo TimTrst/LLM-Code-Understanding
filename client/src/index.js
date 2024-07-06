@@ -6,49 +6,92 @@ import {createTheme, ThemeProvider} from "@mui/material";
 import "./App.css"
 
 const theme = createTheme({
-
-    palette: {
-        primary: {
-            main: "#005792",
+        components: {
+            MuiSelect: {
+                styleOverrides: {
+                    select: {
+                        '&:focus': {
+                            backgroundColor: 'transparent', // Disable color on focus
+                        },
+                    },
+                    root: {
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'transparent', // Disable border color on focus
+                        },
+                    },
+                },
+            },
+            MuiTextField: {
+                styleOverrides: {
+                    root: {
+                        '& .MuiInputLabel-root': {
+                            color: "hsl(0,12%,92%)", // Default label color
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                            color: 'grey', // Label color when focused
+                        },
+                        '& .MuiInputLabel-root.Mui-error': {
+                            color: 'red', // Label color when error
+                        },
+                    },
+                },
+            },
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        '&:hover': {
+                            backgroundColor: '#2c2a2a', // Hover color
+                        },
+                        '&:active': {
+                            backgroundColor: '#383535', // Active color
+                        },
+                    },
+                },
+            },
+            // Add other components as needed
         },
-        secondary: {
-            main: "#2e74c9",
+        palette: {
+            primary: {
+                main: "#005792",
+            },
+            secondary: {
+                main: "#545252",
+            },
+            thirdColor: {
+                main: "#090808"
+            },
+            fourthColor: {
+                main: "hsl(39, 36%, 80%)"
+            }
         },
-        thirdColor: {
-            main: "#00bbf0"
+        typography: {
+            h1: {
+                fontSize: "3rem",
+                fontWeight: "600",
+            },
+            h2: {
+                fontSize: "1.75rem",
+                fontWeight: "600",
+            },
+            h3: {
+                fontSize: "1.5rem",
+                fontWeight: "600",
+            },
+            h4: {
+                fontSize: "1.2rem",
+                fontWeight: "300",
+            }
         },
-        fourthColor: {
-            main: "#fdb44b"
-        }
-    },
-    typography: {
-        h1: {
-            fontSize: "3rem",
-            fontWeight: "600",
-        },
-        h2: {
-            fontSize: "1.75rem",
-            fontWeight: "600",
-        },
-        h3: {
-            fontSize: "1.5rem",
-            fontWeight: "600",
-        },
-        h4: {
-            fontSize: "1.2rem",
-            fontWeight: "300",
-        }
-    },
     }
 )
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <ThemeProvider theme={theme}>
+            <App/>
+        </ThemeProvider>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

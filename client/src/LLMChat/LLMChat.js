@@ -66,15 +66,16 @@ function LLMChat({response, promptlessTextForChat, handleManualRequest, response
     }, [messages]);
 
     return (
-        <Paper elevation={3} sx={{height: '59em', my: 4, py: 2, px: 2, bgcolor: "fourthColor.main"}}>
-            <Card sx={{height: '40em', my: 2, py: 2, px: 2, bgcolor: "secondary.main"}}>
+        <Paper elevation={24} sx={{height: '62em', my: 4, py: 2, px: 2, bgcolor: "fourthColor.main", borderRadius:3}}>
+            <Card className={"custom-border"} sx={{height: '40em', my: 2, py: 2, px: 2, bgcolor: "secondary.main", borderRadius:3}}>
                 <List ref={messagesEndRef} sx={{maxHeight: 600, overflowY: 'auto'}}>
                     {messages.map((message, index) => (
                         <ListItem key={index} sx={{paddingLeft: 0}}>
                             <Paper className={message.user ? "message-user" : "message-system"} elevation={2}
                                    sx={{
                                        padding: 1,
-                                       bgcolor: message.user ? "fourthColor.main" : "primary.main",
+                                       bgcolor: message.user ? "fourthColor.main" : "hsl(0,1%,14%)",
+                                       color: message.user ? "" : "white",
                                        marginLeft: message.user ? 'auto' : 'none'
                                    }}>
                                 {message.user ?
@@ -92,7 +93,7 @@ function LLMChat({response, promptlessTextForChat, handleManualRequest, response
                 </List>
             </Card>
             <ManualInput handleManualSend={handleManualSend}/>
-            <Button sx={{mb: 2}} variant="contained" onClick={clearMessages} startIcon={<DeleteIcon/>}>Clear</Button>
+            <Button sx={{mb: 2, bgcolor:"secondary.main", border: "7px outset black"}} variant="contained" onClick={clearMessages} startIcon={<DeleteIcon/>}>Clear</Button>
         </Paper>
     );
 }

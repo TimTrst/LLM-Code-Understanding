@@ -15,7 +15,7 @@ body {
 }
 
 .fourth-color {
-    background: #fdb44b;
+    background: hsl(39, 36%, 80%);
 }
 
 .message-user {
@@ -24,7 +24,7 @@ body {
     margin-bottom: 10px;
     width: 60%;
 	padding: 0;
-	background: #fdb44b;
+	background: hsl(39, 36%, 80%);
 	&::before {
 		content: '';
 		position: absolute;
@@ -34,7 +34,7 @@ body {
 		left: 36rem;
 		border: .75rem solid transparent;
 		border-top: none;
-		border-bottom-color: #fdb44b;
+		border-bottom-color:hsl(39, 36%, 80%);
 		filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
 		transform: skewX(-20deg);
 	}
@@ -55,8 +55,16 @@ body {
 		left: 1.5em;
 		border: .75rem solid transparent;
 		border-top: none;
-		border-bottom-color: #005792;
+		border-bottom-color: hsl(0,1%,14%);
 		filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
 		transform: skewX(20deg);
 	}
+}
+
+.custom-border{
+	border: 8px solid hsl(42, 15%, 40%);
+	border-right-color: hsl(42, 15%, 85%);
+	border-bottom-color: hsl(42, 15%, 70%);
+	border-left-color: hsl(42, 15%, 46%);
+	border-radius: 15px;
 }

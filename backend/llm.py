@@ -1,6 +1,5 @@
 import os
 
-import openai
 from dotenv import load_dotenv
 from flask import jsonify
 from openai import OpenAI
@@ -15,9 +14,12 @@ client = OpenAI(
 
 model = "gpt-3.5-turbo"
 
+
 def make_chatgpt_request(prompt_config):
     if not prompt_config:
         return jsonify({"error": "No prompt config provided"}), 400
+
+    print("oh oh")
 
     try:
         response = client.chat.completions.create(
