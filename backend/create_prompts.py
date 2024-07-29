@@ -18,7 +18,8 @@ def base_prompts(topic, user_input, feedback):
 
     elif topic == "explain":
         sub_prompt = (
-            "Focus on a general, easy to understand explanation of the problem. Do not be too specific about individual parts, "
+            "Focus on a general, easy to understand explanation of the following recursive code snippet. Do not be "
+            "too specific about individual parts,"
             "but explain the whole concept using the provided code example. "
         )
         temperature = 0.3
@@ -26,8 +27,10 @@ def base_prompts(topic, user_input, feedback):
 
     elif topic == "line_by_line":
         sub_prompt = (
-            "Please provide a detailed, line-by-line explanation of the following recursive code snippet. Each line of code "
-            "should be explained clearly, including the purpose of the line, how it contributes to the recursion, and any important "
+            "Please provide a detailed, line-by-line explanation of the following recursive code snippet. Each line "
+            "of code"
+            "should be explained clearly, including the purpose of the line, how it contributes to the recursion, "
+            "and any important"
             "concepts or terms. "
         )
         temperature = 0.2
@@ -35,7 +38,8 @@ def base_prompts(topic, user_input, feedback):
 
     elif topic == "iterative_comparison":
         sub_prompt = (
-            "Compare the following recursive code snippet with its iterative equivalent. Explain the differences in approach, "
+            "Compare the following recursive code snippet with its iterative equivalent. Explain the differences in "
+            "approach,"
             "performance, and readability. Provide both versions of the code."
         )
         temperature = 0.3
@@ -43,7 +47,8 @@ def base_prompts(topic, user_input, feedback):
 
     elif topic == "optimization":
         sub_prompt = (
-            "Explain how the following recursive code snippet can be optimized. Discuss potential improvements and provide an optimized "
+            "Show how the following recursive code snippet can be optimized. Discuss potential improvements and "
+            "provide an optimized"
             "version of the code."
         )
         temperature = 0.2
@@ -52,12 +57,16 @@ def base_prompts(topic, user_input, feedback):
         # Construct the full prompt
     prompt_config = {
         "prompt": (
-                "Explain the following recursive problem in a manner suitable for a novice programmer learning about recursion. "
+                "You are a tutor helping a student understand recursive functions in computer science. "
                 + sub_prompt +
-                " Describe the inputs and outputs of the program. Additionally, highlight the base case and recursive case, and explain "
-                "how the recursive calls work with a visual representation of the call stack's active and passive flow. "
+                "Highlight the base case and recursive "
+                "case. Explain"
+                "how the recursive calls work by providing an ASCII-art visual representation of the call stack's "
+                "active and passive flow."
                 + feedback +
-                " Code: ``` " + user_input + " ```"
+                " Code snippet: ``` " + user_input + " ```. "
+                "Don't copy the whole code snippet in the answer, if needed, provide only parts."
+                "Maximum tokens: 500"
         ),
         "temperature": temperature,
         "max_tokens": max_tokens,

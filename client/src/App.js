@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Ide from './IDE/Ide';
-//import Sidebar from './Sidebar/Sidebar';
 import LLMChat from './LLMChat/LLMChat';
-import { Container, Typography } from '@mui/material';
+import {Button, Container, Typography} from '@mui/material';
 import PromptlessInteraction from './PromptlessInteraction/PromptlessInteraction';
 import axios from 'axios';
 import AlertNotification from './LLMChat/AlertNotification';
 import initialCode from './IDE/initialCode';
+import Quiz from "./Quiz/QuizBefore";
 
 function App() {
     const [inputCode, setInputCode] = useState('') // code string from the ide component
@@ -17,6 +17,9 @@ function App() {
     const [responseReceived, setResponseReceived] = useState(true) // check if the response is received and can be output to the user
     const [requestFailed, setRequestFailed] = useState(false) // check if a promptless/prompt-based request failed
     const [feedback, setFeedback] = useState(0)
+    const [showQuiz, setShowQuiz] = useState(null)
+    const [initialQuizSubmitted, setInitialQuizSubmitted] = useState(false)
+
 
     useEffect(() => {
         // Set the initial code when the component mounts
@@ -121,9 +124,25 @@ function App() {
         }
     }, [])
 
+    const handleYes = () => setShowQuiz(true);
+    const handleNo = () => setShowQuiz(false);
+
+    if(showQuiz === null){
+        return (
+            <Container style={{ display: 'flex', flexDirection: 'column', alignItems:'center', justifyContent: 'center',
+            height:'100vh', textAlign:'center'}}>
+                <Typography>Do you want to do an initial Quiz?</Typography>
+                 <Container sx={{my:4}}>
+                  <Button onClick={handleYes} sx={{mx:2}}>Yes</Button>
+                  <Button onClick={handleNo} >No</Button>
+                </Container>
+            </Container>
+        )
+    }
+
     return (
         <div className="App" style={{ display: 'flex', flexDirection: 'row' }}>
-            {/*<Sidebar feedback={feedback}/>*/}
+            {!initialQuizSubmitted && showQuiz ? <Quiz setInitialQuizSubmitted={setInitialQuizSubmitted}/> :
             <Container sx={{ display: 'flex', flexDirection: 'column', height: '100%', mt: 10 }}>
                 <Typography variant="h1" sx={{ my: 4, textAlign: 'center', color: 'secondary.main' }}>
                     Promptelix
@@ -146,7 +165,7 @@ function App() {
                 {alertMessage && (
                     <AlertNotification message={alertMessage} severity={alertSeverity} />
                 )}
-            </Container>
+            </Container>}
         </div>
     )
 }

@@ -45,6 +45,9 @@ const theme = createTheme({
                         '&:active': {
                             backgroundColor: '#383535', // Active color
                         },
+                        border:'7px outset black',
+                        backgroundColor: '#545252',
+                        color: "white"
                     },
                 },
             },

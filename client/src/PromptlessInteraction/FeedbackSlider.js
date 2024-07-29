@@ -46,10 +46,10 @@ const FeedbackSlider = React.memo(({ setFeedback }) => {
                         </Typography>
                     </Grid>
                 ))}
-                <Button variant="outlined" sx={{ marginLeft: 2 }} onClick={handleSetFeedback}>
+                <Button variant="contained" sx={{ marginLeft: 2 }} onClick={handleSetFeedback}>
                     Set
                 </Button>
-                <Button variant="outlined" sx={{ marginLeft: 2 }} onClick={handleResetFeedback}>
+                <Button variant="contained" sx={{ marginLeft: 2 }} onClick={handleResetFeedback}>
                     Reset
                 </Button>
             </Box>
