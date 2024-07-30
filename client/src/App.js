@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import Ide from './IDE/Ide';
+import React, { useEffect, useState, useCallback } from 'react'
+import Ide from './IDE/Ide'
 import LLMChat from './LLMChat/LLMChat';
-import {Button, Container, Typography} from '@mui/material';
-import PromptlessInteraction from './PromptlessInteraction/PromptlessInteraction';
-import axios from 'axios';
-import AlertNotification from './LLMChat/AlertNotification';
-import initialCode from './IDE/initialCode';
-import Quiz from "./Quiz/QuizBefore";
+import {Button, Container, Typography} from '@mui/material'
+import QuizIcon from '@mui/icons-material/Quiz'
+import PromptlessInteraction from './PromptlessInteraction/PromptlessInteraction'
+import axios from 'axios'
+import AlertNotification from './LLMChat/AlertNotification'
+import initialCode from './IDE/initialCode'
+import Quiz from "./Quiz/Quiz"
 
 function App() {
     const [inputCode, setInputCode] = useState('') // code string from the ide component
@@ -17,10 +18,14 @@ function App() {
     const [responseReceived, setResponseReceived] = useState(true) // check if the response is received and can be output to the user
     const [requestFailed, setRequestFailed] = useState(false) // check if a promptless/prompt-based request failed
     const [feedback, setFeedback] = useState(0)
+
     const [showQuiz, setShowQuiz] = useState(null)
     const [initialQuizSubmitted, setInitialQuizSubmitted] = useState(false)
-    const [initialQuizResults, setInitialQuizResults] = useState({answers:[], score:0});
+    const [initialQuizResults, setInitialQuizResults] = useState({answers:[], score:0})
 
+    const [showEndingQuiz, setShowEndingQuiz] = useState(false)
+    const [endingQuizSubmitted, setEndingQuizSubmitted] = useState(null)
+    const [endingQuizResults, setEndingQuizResults] = useState({answers:[], score:0})
 
     useEffect(() => {
         // Set the initial code when the component mounts
@@ -28,9 +33,17 @@ function App() {
     }, [])
 
 
+    //Remove these use effects after implementing the results
     useEffect(() => {
-        console.log(initialQuizResults)
     },[initialQuizResults])
+
+    useEffect(() => {
+    }, [endingQuizSubmitted, endingQuizResults])
+
+    useEffect(() => {
+        console.log(showQuiz)
+        console.log(initialQuizSubmitted)
+    }, [showQuiz, initialQuizSubmitted]);
 
     // Function to check if conditions are met before allowing an api request to be sent
     // request: a valid request string to chatgpt (promptless/manual)
@@ -130,8 +143,9 @@ function App() {
         }
     }, [])
 
-    const handleYes = () => setShowQuiz(true);
-    const handleNo = () => setShowQuiz(false);
+    const handleShowEndingQuiz = () => setShowEndingQuiz(true)
+    const handleYes = () => setShowQuiz(true)
+    const handleNo = () => setShowQuiz(false)
 
     if(showQuiz === null){
         return (
@@ -146,10 +160,18 @@ function App() {
         )
     }
 
+    if(showEndingQuiz){
+        return (
+             <Quiz setQuizSubmitted={setEndingQuizSubmitted} setQuizResults={setEndingQuizResults} quizType={'ending'}>
+
+             </Quiz>
+        )
+    }
+
     return (
         <div className="App" style={{ display: 'flex', flexDirection: 'row' }}>
-            {!initialQuizSubmitted && showQuiz ? <Quiz setInitialQuizSubmitted={setInitialQuizSubmitted}
-                                                       setInitialQuizResults={setInitialQuizResults}/> :
+            {(!initialQuizSubmitted && showQuiz) ? <Quiz setQuizSubmitted={setInitialQuizSubmitted}
+                                                       setQuizResults={setInitialQuizResults} quizType={'initial'}/> :
             <Container sx={{ display: 'flex', flexDirection: 'column', height: '100%', mt: 10 }}>
                 <Typography variant="h1" sx={{ my: 4, textAlign: 'center', color: 'secondary.main' }}>
                     Promptelix
@@ -172,6 +194,7 @@ function App() {
                 {alertMessage && (
                     <AlertNotification message={alertMessage} severity={alertSeverity} />
                 )}
+                <Button onClick={handleShowEndingQuiz}><QuizIcon/></Button>
             </Container>}
         </div>
     )

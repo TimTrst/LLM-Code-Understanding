@@ -1,8 +1,8 @@
- const questions = [
+ const questionsEnd = [
     {
       id: 0,
-      type: "BF",
-      heading: `## Q1.1: Backward flow`,
+      type: "TEST",
+      heading: `## Q1.1: Circular Flow`,
       text: `### Given the following code:
 
 \`\`\`cpp
@@ -45,4 +45,4 @@ What will be returned when function(2) is executed? Choose one of the buttons if
     },
   ]
 
-export default questions
+export default questionsEnd
