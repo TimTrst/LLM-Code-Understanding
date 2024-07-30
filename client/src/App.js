@@ -19,12 +19,18 @@ function App() {
     const [feedback, setFeedback] = useState(0)
     const [showQuiz, setShowQuiz] = useState(null)
     const [initialQuizSubmitted, setInitialQuizSubmitted] = useState(false)
+    const [initialQuizResults, setInitialQuizResults] = useState({answers:[], score:0});
 
 
     useEffect(() => {
         // Set the initial code when the component mounts
         setInputCode(initialCode)
     }, [])
+
+
+    useEffect(() => {
+        console.log(initialQuizResults)
+    },[initialQuizResults])
 
     // Function to check if conditions are met before allowing an api request to be sent
     // request: a valid request string to chatgpt (promptless/manual)
@@ -142,7 +148,8 @@ function App() {
 
     return (
         <div className="App" style={{ display: 'flex', flexDirection: 'row' }}>
-            {!initialQuizSubmitted && showQuiz ? <Quiz setInitialQuizSubmitted={setInitialQuizSubmitted}/> :
+            {!initialQuizSubmitted && showQuiz ? <Quiz setInitialQuizSubmitted={setInitialQuizSubmitted}
+                                                       setInitialQuizResults={setInitialQuizResults}/> :
             <Container sx={{ display: 'flex', flexDirection: 'column', height: '100%', mt: 10 }}>
                 <Typography variant="h1" sx={{ my: 4, textAlign: 'center', color: 'secondary.main' }}>
                     Promptelix

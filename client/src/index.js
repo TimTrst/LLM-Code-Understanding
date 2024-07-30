@@ -55,7 +55,7 @@ const theme = createTheme({
         },
         palette: {
             primary: {
-                main: "#005792",
+                main: "hsl(39, 36%, 80%)",
             },
             secondary: {
                 main: "#545252",

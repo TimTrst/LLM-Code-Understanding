@@ -1,120 +1,101 @@
 import React, {useState} from 'react'
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"
+import questions from "./Questions"
+import Question from "./Question"
+import {Button, Container, Paper, Typography} from "@mui/material"
+import Toolbar from "@mui/material/Toolbar"
+import Divider from "@mui/material/Divider"
+import remarkGfm from "remark-gfm";
+import ReactMarkdown from "react-markdown";
 
-const Quiz = ({setInitialQuizSubmitted}) => {
-    const [answers, setAnswers] = useState({q1: '', q2: '', q3: ''})
-    const [submitted, setSubmitted] = useState(false)
+const Quiz = ({setInitialQuizSubmitted, setInitialQuizResults}) => {
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setAnswers((prevAnswers) => ({
-            ...prevAnswers,
-            [name]: value,
-        }));
-    }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        setSubmitted(true)
+    const handleSubmit = () => {
         setInitialQuizSubmitted(true)
     }
 
-    return (
-        <div style={{margin: '20px'}}>
-            <h1>Quiz</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <h2>A.1. First iteration CI questions</h2>
-                    <div>
-                        <h3>A.1.1. Backward flow</h3>
-                        <p>(1) Given the following code:</p>
-                        <pre>
-              {`int function(int y) {
-  if (y == 1)
-    return 5;
-  else {
-    function(y - 1);
-    y = y + 1;
-    return 83;
-  }
-}`}
-            </pre>
-                        <p>What will be returned when function(2) is executed? Write a number, or write "infinite
-                            recursion" if you think that this call will lead to infinite recursion.</p>
-                        <input
-                            type="text"
-                            name="q1"
-                            value={answers.q1}
-                            onChange={handleChange}
-                            placeholder="Your answer"
-                            required
-                        />
-                    </div>
-                </div>
-                <div>
-                    <h2>A.2. Second iteration CI questions</h2>
-                    <div>
-                        <h3>A.2.1. Another example</h3>
-                        <p>(2) Given the following code:</p>
-                        <pre>
-              {`int anotherFunction(int x) {
-  if (x <= 0)
-    return x;
-  return anotherFunction(x - 2) + 3;
-}`}
-            </pre>
-                        <p>What will be returned when anotherFunction(4) is executed? Write a number, or write "infinite
-                            recursion" if you think that this call will lead to infinite recursion.</p>
-                        <input
-                            type="text"
-                            name="q2"
-                            value={answers.q2}
-                            onChange={handleChange}
-                            placeholder="Your answer"
-                            required
-                        />
-                    </div>
-                </div>
-                <div>
-                    <h2>A.3. Third iteration CI questions</h2>
-                    <div>
-                        <h3>A.3.1. Yet another example</h3>
-                        <p>(3) Given the following code:</p>
-                        <pre>
-              {`int yetAnotherFunction(int z) {
-  if (z == 3)
-    return 1;
-  return z * yetAnotherFunction(z - 1);
-}`}
-            </pre>
-                        <p>What will be returned when yetAnotherFunction(3) is executed? Write a number, or write
-                            "infinite recursion" if you think that this call will lead to infinite recursion.</p>
-                        <input
-                            type="text"
-                            name="q3"
-                            value={answers.q3}
-                            onChange={handleChange}
-                            placeholder="Your answer"
-                            required
-                        />
-                    </div>
-                </div>
-                <button type="submit">Submit</button>
-            </form>
-            {submitted && (
-                <div>
-                    <h2>Your Answers</h2>
-                    <p><strong>Q1:</strong> {answers.q1}</p>
-                    <p><strong>Q2:</strong> {answers.q2}</p>
-                    <p><strong>Q3:</strong> {answers.q3}</p>
-                </div>
-            )}
-        </div>
-    )
+    function handleAnswer(newAnswer) {
+
+        setInitialQuizResults((prevResults) => {
+            let updatedAnswers = []
+            updatedAnswers = prevResults.answers
+
+            //is there an answers array element in the current result -> if not, then add it
+            if(!prevResults.answers[currentQuestionIndex]){
+                updatedAnswers.push(newAnswer)
+                //if there is an element, then change it at the current question index
+            }else{
+                updatedAnswers[currentQuestionIndex] = newAnswer
+            }
+
+            return {
+                ...prevResults,
+                answers: updatedAnswers
+            }
+        })
+
+         const nextQuestionIndex = currentQuestionIndex + 1;
+        if (nextQuestionIndex < questions.length) {
+            setCurrentQuestionIndex(nextQuestionIndex);
+         }
+    }
+
+
+function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+        setCurrentQuestionIndex(currentQuestionIndex - 1)
+    }
+}
+
+function nextQuestion() {
+    if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1)
+    }
+}
+
+return (
+    <Container sx={{
+        width: 750, display: 'flex',
+        my: 16,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        boxSizing: 'border-box',
+    }}>
+        <Typography variant="h1" sx={{my: 3}}>Initial Quiz</Typography>
+        <Paper elevation={3} sx={{width: 750, height: "fit-content", backgroundColor: 'primary.main'}}>
+            <Typography sx={{
+                float: 'right',
+                margin: 2
+            }}>{(currentQuestionIndex + 1) + " / " + questions.length}</Typography>
+            <Container sx={{mx: 1}}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {questions[currentQuestionIndex].heading}
+                </ReactMarkdown>
+            </Container>
+            <Divider/>
+            <Question
+                questionText={questions[currentQuestionIndex].text}
+                answers={questions[currentQuestionIndex].answers}
+                onAnswer={handleAnswer}
+            />
+            <Divider sx={{my: 3}}/>
+            <Toolbar sx={{justifyContent: 'space-between', my: 2}}>
+                <Button sx={{width: 100}} onClick={previousQuestion}>&lt; Back</Button>
+                <Button sx={{width: 100}} onClick={nextQuestion}>Next &gt;</Button>
+            </Toolbar>
+        </Paper>
+        <Button sx={{margin: 2}} onClick={handleSubmit}>Finish Quiz?</Button>
+    </Container>
+)
 }
 
 Quiz.propTypes = {
     setInitialQuizSubmitted: PropTypes.func,
+    setInitialQuizResults: PropTypes.func,
 }
 
 export default Quiz;
