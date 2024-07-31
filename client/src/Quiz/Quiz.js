@@ -14,24 +14,29 @@ import ReactMarkdown from "react-markdown";
 const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
     const [questions, setQuestions] = useState(questionsInit)
+    const [selectedAnswers, setSelectedAnswers] = useState({})
+    const [explainAnswers, setExplainAnswers] = useState({})
 
     useEffect(() => {
-        if(quizType=== 'initial'){
+        if (quizType === 'initial') {
             setQuestions(questionsInit)
-        }else{
+        } else {
             setQuestions(questionsEnd)
         }
     }, [quizType]);
 
-    const handleSubmit = () => {
-        setQuizSubmitted(true)
-    }
+    useEffect(() => {
+        console.log('Selected Answers:', selectedAnswers);
+    }, [selectedAnswers]);
 
-    //Add an answer to the result object
-    //update the score
-    //the id in the result.answers array is the index of the question in the questionsInit array (multiple choice).. -> suboptimal (clash of keys)
-    function handleAnswer(newAnswer) {
+    useEffect(() => {
+        console.log('Explain Answers:', explainAnswers);
+    }, [explainAnswers]);
 
+    
+    function handleAnswers() {
+        setQuizResults([])
+        /*
         setQuizResults((prevResults) => {
             let updatedAnswers = prevResults.answers
             let score = prevResults.score
@@ -60,11 +65,8 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                 score: score
             }
         })
-
-        const nextQuestionIndex = currentQuestionIndex + 1;
-        if (nextQuestionIndex < questions.length) {
-            setCurrentQuestionIndex(nextQuestionIndex);
-        }
+         */
+        setQuizSubmitted(true)
     }
 
 
@@ -103,15 +105,19 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                 </Container>
                 <Divider/>
                 <Question
-                    questionText={questions[currentQuestionIndex].text}
-                    answers={questions[currentQuestionIndex].answers}
-                    onAnswer={handleAnswer}
+                    question={questions[currentQuestionIndex]}
+                    setSelectedAnswers={setSelectedAnswers}
+                    setExplainAnswers={setExplainAnswers}
+                    selectedAnswers={selectedAnswers}
+                    explainAnswers={explainAnswers}
                 />
                 <Divider sx={{my: 3}}/>
                 <Toolbar sx={{justifyContent: 'space-between', my: 2}}>
-                    <Button sx={{width: 120}} onClick={previousQuestion} disabled={currentQuestionIndex===0}><KeyboardArrowLeftIcon/> </Button>
-                    <Button sx={{margin: 2}} onClick={handleSubmit}>Finish Quiz?</Button>
-                    <Button sx={{width: 120}} onClick={nextQuestion} disabled={currentQuestionIndex===questions.length-1}><KeyboardArrowRightIcon/></Button>
+                    <Button sx={{width: 120}} onClick={previousQuestion}
+                            disabled={currentQuestionIndex === 0}><KeyboardArrowLeftIcon/> </Button>
+                    <Button sx={{margin: 2}} onClick={handleAnswers}>Finish Quiz?</Button>
+                    <Button sx={{width: 120}} onClick={nextQuestion}
+                            disabled={currentQuestionIndex === questions.length - 1}><KeyboardArrowRightIcon/></Button>
                 </Toolbar>
             </Paper>
         </Container>

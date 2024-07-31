@@ -1,48 +1,66 @@
- const questionsInit = [
+const questionsInit = [
     {
-      id: 0,
-      type: "BF",
-      heading: `## Q1.1: Backward flow`,
-      text: `### Given the following code:
-
-\`\`\`cpp
-int function(int y) {
-  if (y == 1)
-    return 5;
-  else {
-    function(y - 1);
-    y = y + 1;
-    return 83;
-  }
-}
-\`\`\`
-
-### **Question**  
-What will be returned when function(2) is executed? Choose one of the buttons if you think it returns a number or infinite recursion.`,
-      answers: [
-        { id: 1, text: '83', isCorrect: true },
-        { id: 2, text: '5', isCorrect: false },
-        { id: 3, text: '6', isCorrect: false },
-        { id: 4, text: 'Infinite', isCorrect: false },
-        { id: 5, text: 'Other', isCorrect: false },
-      ],
+        id: 0,
+        type: "MC",
+        heading: "## Q1.2: Base case in recursion",
+        text: "### **Question**\nWhat is a base case in recursion?",
+        answers: [
+            {id: 0, text: 'The condition under which the recursion terminates.', isCorrect: true},
+            {id: 1, text: 'The first recursive call made by the function.', isCorrect: false},
+            {id: 2, text: 'A loop that helps in recursion.', isCorrect: false},
+            {id: 3, text: 'The value returned by the recursive function.', isCorrect: false},
+        ],
     },
-     {
-      id: 1,
-         heading: `## Q1.2: Backward flow`,
-      text: `### (2) 
-      
-      No statements after the recursive call will execute.
-      
-      **Question**
-      Is the statement above correct?
-      `,
-
-      answers: [
-        { id: 1, text: 'Yes', isCorrect: false },
-        { id: 2, text: 'No', isCorrect: true },
-      ],
+    {
+        id: 1,
+        type: "MC",
+        heading: "## Q1.3: True statement about recursive functions",
+        text: "### **Question**\nWhich of the following is true about recursive functions?",
+        answers: [
+            {id: 0, text: 'They must have a base case to avoid infinite recursion.', isCorrect: true},
+            {id: 1, text: 'They are always more efficient than iterative functions.', isCorrect: false},
+            {id: 2, text: 'They can only be used with numeric data.', isCorrect: false},
+            {id: 3, text: 'They do not require a return statement.', isCorrect: false},
+        ],
     },
-  ]
+    {
+        id: 2,
+        type: "MC",
+        heading: "## Q2.1: Factorial function",
+        text: "### **Question**\nGiven the following recursive function, what will `factorial(3)` return?\n```java\nint factorial(int n) {\n if (n == 0) return 1;\n else return n * factorial(n - 1);\n}\n```",
+        answers: [
+            {id: 0, text: '0', isCorrect: false},
+            {id: 1, text: '1', isCorrect: false},
+            {id: 2, text: '6', isCorrect: true},
+            {id: 3, text: 'Infinite recursion', isCorrect: false},
+        ],
+    },
+    {
+        id: 3,
+        type: "MC",
+        heading: "## Q2.2: Recursive function calls",
+        text: "### **Question**\nWhat values are returned by the following function calls: `function1(2, 3)` and `function2(2, 3)`?\n```java\nint function1(int a, int b) {\n if (a == b) return a;\n else return function1(a, b - 1) + b;\n}\n\nint function2(int x, int y) {\n if (x > 1) return function2(x - 1, y) + y;\n else return y;\n}\n```",
+        answers: [
+            {id: 0, text: '3 and 3', isCorrect: false},
+            {id: 1, text: '5 and 6', isCorrect: true},
+            {id: 2, text: 'Infinite recursion and 3', isCorrect: false},
+            {id: 3, text: '5 and Infinite recursion', isCorrect: false},
+        ],
+    },
+    {
+        id: 4,
+        type: "EXPLAIN",
+        heading: "## Q2.3: Recursive function to find the greatest common divisor (GCD)",
+        text: "### **Question**\nWrite a recursive function to find the greatest common divisor (GCD) of two integers.\n```java\nint gcd(int a, int b) {\n if (b == 0) return a;\n else return gcd(b, a % b);\n}\n```\nExplain how this function works and what it returns for the integers `48` and `18`.",
+        answers: [
+            {
+                id: 0,
+                text: 'The function works by repeatedly applying the Euclidean algorithm, which reduces the problem by replacing the pair (a, b) with (b, a % b) until b becomes 0. It returns 6 for the integers 48 and 18.',
+                isCorrect: true
+            },
+        ],
+    }
+];
+
 
 export default questionsInit

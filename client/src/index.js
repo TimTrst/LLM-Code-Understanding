@@ -7,6 +7,16 @@ import "./App.css"
 
 const theme = createTheme({
         components: {
+            MuiCheckbox:{
+                styleOverrides: {
+                    root: {
+                        '&.Mui-checked': {
+                        color: '#3D70B2',
+                         },
+                    },
+                    checked: {},
+                }
+            },
             MuiSelect: {
                 styleOverrides: {
                     select: {

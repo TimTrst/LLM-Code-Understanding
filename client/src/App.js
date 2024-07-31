@@ -41,8 +41,6 @@ function App() {
     }, [endingQuizSubmitted, endingQuizResults])
 
     useEffect(() => {
-        console.log(showQuiz)
-        console.log(initialQuizSubmitted)
     }, [showQuiz, initialQuizSubmitted]);
 
     // Function to check if conditions are met before allowing an api request to be sent

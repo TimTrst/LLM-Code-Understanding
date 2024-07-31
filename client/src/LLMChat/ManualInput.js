@@ -23,7 +23,7 @@ const ManualInput = ({handleManualSend}) => {
                 px: 2,
                 my: 3.4,
             }}>
-                <TextField id="standard-basic" label="Enter your questionsInit here" variant="standard" multiline fullWidth
+                <TextField id="standard-basic" label="Enter your questions here" variant="standard" multiline fullWidth
                            minRows={3} maxRows={3}
                            InputProps={{disableUnderline: true}} value={inputText}
                            onChange={(event) => setInputText(event.target.value)}
