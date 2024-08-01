@@ -5,10 +5,10 @@ const questionsEnd = [
         heading: "## Q1.1: Termination of recursive function",
         text: "### **Question**\nHow does a recursive function terminate?",
         answers: [
-            {id: 0, text: 'When it completes a fixed number of iterations.', isCorrect: false},
-            {id: 1, text: 'When it reaches its base case.', isCorrect: true},
-            {id: 2, text: 'When the operating system stops it.', isCorrect: false},
-            {id: 3, text: 'When it runs out of memory.', isCorrect: false},
+            {id: 0, text: 'When it completes a fixed number of iterations.', misconception: 'test', isCorrect: false},
+            {id: 1, text: 'When it reaches its base case.', misconception: 'test', isCorrect: true},
+            {id: 2, text: 'When the operating system stops it.', misconception: 'test', isCorrect: false},
+            {id: 3, text: 'When it runs out of memory.', misconception: 'test', isCorrect: false},
         ],
     },
     {
@@ -17,10 +17,10 @@ const questionsEnd = [
         heading: "## Q1.2: Absence of base case",
         text: "### **Question**\nWhat happens if a recursive function does not have a base case?",
         answers: [
-            {id: 0, text: 'It will compile but not run.', isCorrect: false},
-            {id: 1, text: 'It will result in infinite recursion.', isCorrect: true},
-            {id: 2, text: 'It will return a default value.', isCorrect: false},
-            {id: 3, text: 'It will behave like a normal function.', isCorrect: false},
+            {id: 0, text: 'It will compile but not run.', misconception: 'test', isCorrect: false},
+            {id: 1, text: 'It will result in infinite recursion.', misconception: 'test', isCorrect: true},
+            {id: 2, text: 'It will return a default value.', misconception: 'test', isCorrect: false},
+            {id: 3, text: 'It will behave like a normal function.', misconception: 'test', isCorrect: false},
         ],
     },
     {
@@ -32,11 +32,22 @@ const questionsEnd = [
             {
                 id: 0,
                 text: 'Direct recursion involves a function calling itself, while indirect recursion involves a function being called by another function.',
+                misconception: 'test',
                 isCorrect: true
             },
-            {id: 1, text: 'Direct recursion is faster than indirect recursion.', isCorrect: false},
-            {id: 2, text: 'Indirect recursion is always more complex than direct recursion.', isCorrect: false},
-            {id: 3, text: 'There is no difference; they are the same.', isCorrect: false},
+            {
+                id: 1,
+                text: 'Direct recursion is faster than indirect recursion.',
+                misconception: 'test',
+                isCorrect: false
+            },
+            {
+                id: 2,
+                text: 'Indirect recursion is always more complex than direct recursion.',
+                misconception: 'test',
+                isCorrect: false
+            },
+            {id: 3, text: 'There is no difference; they are the same.', misconception: 'test', isCorrect: false},
         ],
     },
     {
@@ -45,11 +56,11 @@ const questionsEnd = [
         heading: "## Q2.3: Recursive sum function",
         text: "### **Question**\nWhat value will be returned by the following function call: `sumDigits(1234)`?\n```java\nint sumDigits(int n) {\n if (n == 0) return 0;\n else return n % 10 + sumDigits(n / 10);\n}\n```",
         answers: [
-            {id: 1, text: '10', isCorrect: false},
-            {id: 2, text: '1234', isCorrect: false},
-            {id: 3, text: '1', isCorrect: false},
-            {id: 4, text: '10', isCorrect: true},
-            {id: 5, text: 'Infinite recursion', isCorrect: false},
+            {id: 1, text: '10', misconception: 'test', isCorrect: false},
+            {id: 2, text: '1234', misconception: 'test', isCorrect: false},
+            {id: 3, text: '1', misconception: 'test', isCorrect: false},
+            {id: 4, text: '10', misconception: 'test', isCorrect: true},
+            {id: 5, text: 'Infinite recursion', misconception: 'test', isCorrect: false},
         ],
     },
     {
@@ -61,6 +72,7 @@ const questionsEnd = [
             {
                 id: 0,
                 text: 'The function works by comparing the last element of the array with the maximum of the rest of the array. It returns 9 for the given array.',
+                misconception: 'test',
                 isCorrect: true
             },
         ],

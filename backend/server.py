@@ -85,6 +85,14 @@ def explain_prompts():
     return response
 
 
+@app.route('/check-quiz-answers', methods=['POST'])
+def check_quiz_answers():
+    question = request.json['question']
+    user_answer = request.json['userAnswer']
+
+    return jsonify({'status': True})
+
+
 # todo
 @app.route('/delete-context', methods=['GET'])
 def delete_context():

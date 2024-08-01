@@ -19,29 +19,32 @@ function App() {
     const [requestFailed, setRequestFailed] = useState(false) // check if a promptless/prompt-based request failed
     const [feedback, setFeedback] = useState(0)
 
-    const [showQuiz, setShowQuiz] = useState(null)
-    const [initialQuizSubmitted, setInitialQuizSubmitted] = useState(false)
-    const [initialQuizResults, setInitialQuizResults] = useState({answers:[], score:0})
+    const [showPreQuiz, setShowPreQuiz] = useState(null)
+    const [preQuizSubmitted, setPreQuizSubmitted] = useState(false)
+    const [preQuizResults, setPreQuizResults] = useState({answers:[], score:0})
 
-    const [showEndingQuiz, setShowEndingQuiz] = useState(false)
-    const [endingQuizSubmitted, setEndingQuizSubmitted] = useState(null)
-    const [endingQuizResults, setEndingQuizResults] = useState({answers:[], score:0})
+    const [showPostQuiz, setShowPostQuiz] = useState(false)
+    const [postQuizSubmitted, setPostQuizSubmitted] = useState(null)
+    const [postQuizResult, setPostQuizResult] = useState({answers:[], score:0})
 
     useEffect(() => {
         // Set the initial code when the component mounts
         setInputCode(initialCode)
     }, [])
 
-
     //Remove these use effects after implementing the results
     useEffect(() => {
-    },[initialQuizResults])
+    },[preQuizResults])
 
     useEffect(() => {
-    }, [endingQuizSubmitted, endingQuizResults])
+        console.log("Score initial: " + preQuizResults.score)
+        console.log("Score post: " + postQuizResult.score)
+
+    }, [postQuizSubmitted, postQuizResult])
 
     useEffect(() => {
-    }, [showQuiz, initialQuizSubmitted]);
+        //console.log("RESULTS " + preQuizResults)
+    }, [showPreQuiz, preQuizSubmitted]);
 
     // Function to check if conditions are met before allowing an api request to be sent
     // request: a valid request string to chatgpt (promptless/manual)
@@ -141,11 +144,11 @@ function App() {
         }
     }, [])
 
-    const handleShowEndingQuiz = () => setShowEndingQuiz(true)
-    const handleYes = () => setShowQuiz(true)
-    const handleNo = () => setShowQuiz(false)
+    const handleShowEndingQuiz = () => setShowPostQuiz(true)
+    const handleYes = () => setShowPreQuiz(true)
+    const handleNo = () => setShowPreQuiz(false)
 
-    if(showQuiz === null){
+    if(showPreQuiz === null){
         return (
             <Container style={{ display: 'flex', flexDirection: 'column', alignItems:'center', justifyContent: 'center',
             height:'100vh', textAlign:'center'}}>
@@ -158,9 +161,9 @@ function App() {
         )
     }
 
-    if(showEndingQuiz){
+    if(showPostQuiz && !postQuizSubmitted){
         return (
-             <Quiz setQuizSubmitted={setEndingQuizSubmitted} setQuizResults={setEndingQuizResults} quizType={'ending'}>
+             <Quiz setQuizSubmitted={setPostQuizSubmitted} setQuizResults={setPostQuizResult} quizType={'ending'}>
 
              </Quiz>
         )
@@ -168,8 +171,8 @@ function App() {
 
     return (
         <div className="App" style={{ display: 'flex', flexDirection: 'row' }}>
-            {(!initialQuizSubmitted && showQuiz) ? <Quiz setQuizSubmitted={setInitialQuizSubmitted}
-                                                       setQuizResults={setInitialQuizResults} quizType={'initial'}/> :
+            {(!preQuizSubmitted && showPreQuiz) ? <Quiz setQuizSubmitted={setPreQuizSubmitted}
+                                                       setQuizResults={setPreQuizResults} quizType={'initial'}/> :
             <Container sx={{ display: 'flex', flexDirection: 'column', height: '100%', mt: 10 }}>
                 <Typography variant="h1" sx={{ my: 4, textAlign: 'center', color: 'secondary.main' }}>
                     Promptelix

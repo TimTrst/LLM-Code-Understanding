@@ -29,7 +29,7 @@ const Question = ({question, setSelectedAnswers, setExplainAnswers, selectedAnsw
 const handleExplainChange = (questionId, text) => {
     setExplainAnswers(prevExplain => ({
         ...prevExplain,
-        [questionId]: text
+        [questionId]: {answer: text}
     }))
 }
 
@@ -52,7 +52,7 @@ const renderExplain = () => {
     return (
         <Container>
             <TextField id="standard-basic" label="Enter" variant="standard"
-                       value={explainAnswers[question.id] || ""}
+                       value={explainAnswers[question.id]?.answer || ""}
                        onChange={(e) => handleExplainChange(question.id, e.target.value)}>
             </TextField>
         </Container>
