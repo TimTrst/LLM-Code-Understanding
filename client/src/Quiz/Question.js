@@ -51,7 +51,8 @@ const renderMultipleChoice = () => {
 const renderExplain = () => {
     return (
         <Container>
-            <TextField id="standard-basic" label="Enter" variant="standard"
+            <TextField id="standard-basic" label="Enter" variant="standard"  multiline fullWidth
+                           minRows={3} maxRows={3} sx={{backgroundColor:"white"}}
                        value={explainAnswers[question.id]?.answer || ""}
                        onChange={(e) => handleExplainChange(question.id, e.target.value)}>
             </TextField>

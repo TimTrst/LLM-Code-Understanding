@@ -1,0 +1,40 @@
+{
+  "misconceptions": [
+    {
+      "name": "BFneverExecute",
+      "description": "No statements after the recursive call will execute."
+    },
+    {
+      "name": "BFexecuteBefore",
+      "description": "Statements that come after the recursive call will execute before the recursive call is executed."
+    },
+    {
+      "name": "InfiniteExecution",
+      "description": "If there is a base case then it will always execute, even if the recursive call does not reduce the problem to the base case."
+    },
+    {
+      "name": "RCwrite",
+      "description": "Cannot formulate a recursive call that eventually reaches the base case."
+    },
+    {
+      "name": "RCnoReturnRequired",
+      "description": "A value will be returned from a recursive call even if the return keyword is omitted."
+    },
+    {
+      "name": "RCreturnIsRequired",
+      "description": "All recursive calls require the return keyword even if the recursive function does not return a value."
+    },
+    {
+      "name": "BCbeforeRecursiveCase",
+      "description": "The base case must appear before the recursive call, leading to difficulty recognizing whether the recursive call or the base case is executed when tracing code."
+    },
+    {
+      "name": "VU",
+      "description": "Unawareness of how variables are updated on every recursive call."
+    },
+    {
+      "name": "LP",
+      "description": "Implementing recursive functions (especially tail recursion) as a loop."
+    }
+  ]
+}

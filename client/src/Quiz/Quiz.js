@@ -13,6 +13,7 @@ import remarkGfm from "remark-gfm"
 import ReactMarkdown from "react-markdown"
 import axios from "axios"
 import Box from "@mui/material/Box";
+import AlertNotification from "../AlertNotification";
 
 const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -20,6 +21,7 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
     const [selectedAnswers, setSelectedAnswers] = useState({})
     const [explainAnswers, setExplainAnswers] = useState({})
     const [evaluationStarted, setEvaluationStarted] = useState(false)
+    const [allQuestionsAnswered, setAllQuestionsAnswered] = useState(null)
 
     useEffect(() => {
         if (quizType === 'initial') {
@@ -47,6 +49,19 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
 
 
     async function handleAnswers() {
+
+        const questions_count = questions.length
+        const selectedAnswers_count = Object.keys(selectedAnswers).length
+        const explainAnswers_count = Object.keys(explainAnswers).length
+
+        if(selectedAnswers_count + explainAnswers_count < questions_count){
+            setAllQuestionsAnswered(false)
+            return
+        }else{
+            setAllQuestionsAnswered(true)
+        }
+
+
         setEvaluationStarted(true)
 
         let score = 0
@@ -78,22 +93,34 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
             }
         }
 
-        //to be evaluated by something (gpt or test cases?)
+        //answers with textual answers (ambiguous) are passed to chatgpt api
+        //gpt will return if the answer is correct
         if (Object.keys(explainAnswers).length !== 0) {
             for (const key in explainAnswers) {
                 //handle the checking of the correctness of the textual answer here before finishing the score calculation
 
                 try {
+                    //call to gpt api
+                    //response.data will have a "text" section and an "misconception" section
+                    //the misconceptions are provided to gpt with every request
                     const response = await handleExplainAnswer(questions[key], explainAnswers[key].answer)
-                    console.log(response.data)
 
                     if (Object.keys(response).length !== 0) {
                         const result = response.data["text"]
 
                         const isCorrect = result["correct"]
 
-                        console.log("is correct?: " + result["correct"])
-                        console.log("???: " + isCorrect)
+                        //gpt tries to identify a misconception in the answer of the user and return it as an array
+                        let misconceptionsList = []
+                        misconceptionsList = result["misconception"]
+
+                        if (misconceptionsList.length !== 0) {
+                            misconceptionsList.forEach(misconception => {
+                                if (!misconceptions.includes(misconception)) {
+                                    misconceptions.push(misconception)
+                                }
+                            })
+                        }
 
                         if (isCorrect) {
                             explainAnswers[key]["isCorrect"] = true
@@ -188,6 +215,7 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                     <Button sx={{width: 120}} onClick={nextQuestion}
                             disabled={currentQuestionIndex === questions.length - 1}><KeyboardArrowRightIcon/></Button>
                 </Toolbar>
+                {!allQuestionsAnswered && allQuestionsAnswered !== null && <AlertNotification message={"There are questions unanswered"} severity={"error"}/>}
             </Paper>
         )
     }

@@ -1,3 +1,4 @@
+import json
 import os
 
 from dotenv import load_dotenv
@@ -14,6 +15,9 @@ client = OpenAI(
 
 model = "gpt-3.5-turbo"
 
+with open('misconceptions.json') as f:
+    misconceptions = json.load(f)
+
 
 def make_chatgpt_request(prompt_config):
     if not prompt_config:
@@ -23,7 +27,8 @@ def make_chatgpt_request(prompt_config):
         response = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "system", "content": "You are a tutor for novice programmers."},
+                {"role": "system", "content": f"The following misconceptions about recursion should be considered "
+                                              f"when evaluating requests: {misconceptions}"},
                 {"role": "user", "content": prompt_config["prompt"]}
             ],
             temperature=prompt_config["temperature"],

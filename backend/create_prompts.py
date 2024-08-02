@@ -102,12 +102,9 @@ def check_answer_prompt(question, user_answer):
     Correct Answer: "{correct_answer}"
     Student's Answer: "{user_answer}"
 
-    Return the evaluation in the following JSON format:
-    {{
-        "correct": True/False,
-        "misconception": What kind of misconception does the user might have about recursion, based on the provided solution
-    }}
-    """,
+    Return the evaluation in the following JSON format: {{ "correct": True/False, "misconception": [use the 
+    misconceptions names (only provide the names in this array) without descriptions from the provided context based on the provided student answer. Leave 
+    array empty if none match.] }} """,
 
         "temperature": temperature,
         "max_tokens": max_tokens,

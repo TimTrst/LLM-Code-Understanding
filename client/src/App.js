@@ -5,7 +5,7 @@ import {Button, Container, Typography} from '@mui/material'
 import QuizIcon from '@mui/icons-material/Quiz'
 import PromptlessInteraction from './PromptlessInteraction/PromptlessInteraction'
 import axios from 'axios'
-import AlertNotification from './LLMChat/AlertNotification'
+import AlertNotification from './AlertNotification'
 import initialCode from './IDE/initialCode'
 import Quiz from "./Quiz/Quiz"
 
