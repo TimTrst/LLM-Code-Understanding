@@ -34,6 +34,7 @@ function App() {
 
     //Remove these use effects after implementing the results
     useEffect(() => {
+        console.log(preQuizResults)
     },[preQuizResults])
 
     useEffect(() => {
@@ -163,9 +164,7 @@ function App() {
 
     if(showPostQuiz && !postQuizSubmitted){
         return (
-             <Quiz setQuizSubmitted={setPostQuizSubmitted} setQuizResults={setPostQuizResult} quizType={'ending'}>
-
-             </Quiz>
+             <Quiz setQuizSubmitted={setPostQuizSubmitted} setQuizResults={setPostQuizResult} quizType={'ending'}/>
         )
     }
 
@@ -195,7 +194,9 @@ function App() {
                 {alertMessage && (
                     <AlertNotification message={alertMessage} severity={alertSeverity} />
                 )}
-                <Button onClick={handleShowEndingQuiz}><QuizIcon/></Button>
+                {preQuizSubmitted &&
+                    <Button onClick={handleShowEndingQuiz}><QuizIcon/></Button>
+                }
             </Container>}
         </div>
     )

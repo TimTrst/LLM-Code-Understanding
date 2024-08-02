@@ -12,6 +12,7 @@ import Divider from "@mui/material/Divider"
 import remarkGfm from "remark-gfm"
 import ReactMarkdown from "react-markdown"
 import axios from "axios"
+import Box from "@mui/material/Box";
 
 const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -30,12 +31,11 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
 
     useEffect(() => {
         //console.log('Selected Answers:', selectedAnswers);
-    }, [selectedAnswers]);
+    }, [selectedAnswers])
 
     useEffect(() => {
         //console.log('Explain Answers:', explainAnswers);
-    }, [explainAnswers]);
-
+    }, [explainAnswers])
 
     const handleExplainAnswer = useCallback(async (question, userAnswer) => {
         try {
@@ -82,15 +82,31 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
         if (Object.keys(explainAnswers).length !== 0) {
             for (const key in explainAnswers) {
                 //handle the checking of the correctness of the textual answer here before finishing the score calculation
-                const response = await handleExplainAnswer(questions[key], explainAnswers[key].answer)
 
-                //see if the answer was correct by waiting for the API response
-                if (response.data.status) {
-                    explainAnswers[key]["isCorrect"] = true
-                    score++
-                }else{
-                    explainAnswers[key]["isCorrect"] = false
+                try {
+                    const response = await handleExplainAnswer(questions[key], explainAnswers[key].answer)
+                    console.log(response.data)
+
+                    if (Object.keys(response).length !== 0) {
+                        const result = response.data["text"]
+
+                        const isCorrect = result["correct"]
+
+                        console.log("is correct?: " + result["correct"])
+                        console.log("???: " + isCorrect)
+
+                        if (isCorrect) {
+                            explainAnswers[key]["isCorrect"] = true
+                            score++
+                        } else {
+                            explainAnswers[key]["isCorrect"] = false
+                        }
+                    }
+
+                } catch (error) {
+                    console.log("There was an error while trying to request an answer from chatgpt" + error);
                 }
+
             }
         }
 
@@ -120,25 +136,33 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
 
     const renderLoadingIcon = () => {
         return (
-            <Container>
-                <LoopIcon sx={{
-                    animation: "spin 2s linear infinite",
-                    "@keyframes spin": {
-                        "0%": {
-                            transform: "rotate(360deg)",
+            <Box>
+                <Box display="flex"
+                     justifyContent="center"
+                     alignItems="center"
+                     minHeight="40vh">
+                    <LoopIcon fontSize="large" sx={{
+                        animation: "spin 2s linear infinite",
+                        "@keyframes spin": {
+                            "0%": {
+                                transform: "rotate(360deg)",
+                            },
+                            "100%": {
+                                transform: "rotate(0deg)",
+                            },
                         },
-                        "100%": {
-                            transform: "rotate(0deg)",
-                        },
-                    },
-                }}/>
-            </Container>
+                    }}/>
+                </Box>
+                <Typography sx={{display: "clear"}}>
+                    Answers are currently being processed...
+                </Typography>
+            </Box>
         )
     }
 
     const renderQuizPaper = () => {
         return (
-            <Container>
+            <Paper elevation={3} sx={{width: 750, height: "fit-content", backgroundColor: 'primary.main'}}>
                 <Typography sx={{
                     float: 'right',
                     margin: 2
@@ -164,7 +188,7 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                     <Button sx={{width: 120}} onClick={nextQuestion}
                             disabled={currentQuestionIndex === questions.length - 1}><KeyboardArrowRightIcon/></Button>
                 </Toolbar>
-            </Container>
+            </Paper>
         )
     }
 
@@ -179,9 +203,7 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
             boxSizing: 'border-box',
         }}>
             <Typography variant="h1" sx={{my: 3}}>{quizType === "initial" ? "Initial Quiz" : "Ending Quiz"}</Typography>
-            <Paper elevation={3} sx={{width: 750, height: "fit-content", backgroundColor: 'primary.main'}}>
-                {evaluationStarted ? renderLoadingIcon() : renderQuizPaper()}
-            </Paper>
+            {evaluationStarted ? renderLoadingIcon() : renderQuizPaper()}
         </Container>
     )
 }

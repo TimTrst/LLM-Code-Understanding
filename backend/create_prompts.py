@@ -65,8 +65,8 @@ def base_prompts(topic, user_input, feedback):
                 "active and passive flow."
                 + feedback +
                 " Code snippet: ``` " + user_input + " ```. "
-                "Don't copy the whole code snippet in the answer, if needed, provide only parts."
-                "Maximum tokens: 500"
+                                                     "Don't copy the whole code snippet in the answer, if needed, provide only parts."
+                                                     "Maximum tokens: 500"
         ),
         "temperature": temperature,
         "max_tokens": max_tokens,
@@ -87,52 +87,30 @@ def manual_prompt(user_question, user_input):
     return prompt_config
 
 
-def misconceptions_prompts(topic, user_input):
-    prompt = ""
+def check_answer_prompt(question, user_answer):
+    max_tokens = 300
+    temperature = 0.2
 
-    if topic == "backwardFlow":
-        prompt = f"Explain backward flow in recursion using the following example:\n{user_input}"
-    elif topic == "infiniteRecursion":
-        prompt = f"Explain the risk of infinite recursion and how to avoid it using the following example:\n{user_input}"
-    elif topic == "recursiveCalls":
-        prompt = f"Explain how to formulate recursive calls using the following example:\n{user_input}"
-    elif topic == "returnKeyword":
-        prompt = f"Explain the usage of the return keyword in recursion using the following example:\n{user_input}"
-    elif topic == "baseCasePosition":
-        prompt = f"Explain the correct positioning of the base case in recursion using the following example:\n{user_input}"
-    elif topic == "baseCaseActions":
-        prompt = f"Explain the actions of the base case in recursion using the following example:\n{user_input}"
-    elif topic == "writingBaseCases":
-        prompt = f"Provide guidance on writing base cases in recursion using the following example:\n{user_input}"
-    elif topic == "variableUpdates":
-        prompt = f"Explain how variable updates work in recursion using the following example:\n{user_input}"
+    question_extracted = question["text"]
+    correct_answer = question["answers"][0]["text"]
 
+    prompt_config = {
+        "prompt": f"""
+    Evaluate the following student's answer to a quiz question.
 
-def dynamic_prompts(user_inputs, misconceptions):
-    # when the user makes the quiz
-    def create_prompt(user_input, misconceptions):
-        prompts = []
-        if "BF1" in misconceptions:
-            prompts.append(
-                f"After a recursive call, the program continues executing statements following the call in the current stack frame. Let's look at an example:\n{user_input}")
-        if "INF1" in misconceptions:
-            prompts.append(
-                f"Even if a base case exists, the recursive calls must progress towards it to avoid infinite recursion. Here's how:\n{user_input}")
-        if "RC1" in misconceptions:
-            prompts.append(
-                f"Recursive calls need to break down the problem into smaller sub-problems until a base case is reached. Example:\n{user_input}")
-        if "RC2" in misconceptions:
-            prompts.append(
-                f"Not all recursive functions need a return statement. Let's explore when it's necessary:\n{user_input}")
-        if "BC1" in misconceptions:
-            prompts.append(
-                f"The base case can be placed logically anywhere in the function. Understand its role with this example:\n{user_input}")
-        if "BC2" in misconceptions:
-            prompts.append(
-                f"The base case doesn't have to return a constant. It can return a variable or computed value. Example:\n{user_input}")
-        if "VU1" in misconceptions:
-            prompts.append(
-                f"Variables in recursive calls are updated within their own stack frame. Learn how this works:\n{user_input}")
+    Question: "{question_extracted}"
+    Correct Answer: "{correct_answer}"
+    Student's Answer: "{user_answer}"
 
-        combined_prompt = "\n\n".join(prompts)
-        return combined_prompt
+    Return the evaluation in the following JSON format:
+    {{
+        "correct": True/False,
+        "misconception": What kind of misconception does the user might have about recursion, based on the provided solution
+    }}
+    """,
+
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+    }
+
+    return prompt_config

@@ -66,7 +66,7 @@ const questionsInit = [
         id: 4,
         type: "EXPLAIN",
         heading: "## Q2.3: Recursive function to find the greatest common divisor (GCD)",
-        text: "### **Question**\nWrite a recursive function to find the greatest common divisor (GCD) of two integers.\n```java\nint gcd(int a, int b) {\n if (b == 0) return a;\n else return gcd(b, a % b);\n}\n```\nExplain how this function works and what it returns for the integers `48` and `18`.",
+        text: "### **Question**\n```java\nint gcd(int a, int b) {\n if (b == 0) return a;\n else return gcd(b, a % b);\n}\n```\nExplain how this function works and what it returns for the integers `48` and `18`.",
         answers: [
             {
                 id: 0,

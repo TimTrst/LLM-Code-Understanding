@@ -1,9 +1,10 @@
-import time
+import json
+
 from flask import Flask, request, jsonify
 import datetime
 from compilecode import check_if_compilable
-from checkinput import validate_input, add_feedback
-from create_prompts import base_prompts, manual_prompt
+from checkinput import validate_input, add_feedback, validate_question
+from create_prompts import base_prompts, manual_prompt, check_answer_prompt
 from llm import make_chatgpt_request
 from config import Config
 
@@ -48,7 +49,7 @@ def get_manual_request():
     response = make_chatgpt_request(prompt_config)
 
     # return the response to the frontend
-    return response
+    return jsonify(response)
 
 
 @app.route('/explain-prompts', methods=['POST'])
@@ -82,7 +83,7 @@ def explain_prompts():
     response = make_chatgpt_request(prompt_config)
 
     # return the response to the frontend
-    return response
+    return jsonify(response)
 
 
 @app.route('/check-quiz-answers', methods=['POST'])
@@ -90,7 +91,41 @@ def check_quiz_answers():
     question = request.json['question']
     user_answer = request.json['userAnswer']
 
-    return jsonify({'status': True})
+    params_valid = validate_input(question, user_answer)
+    question_valid = validate_question(question)
+
+    if not params_valid:
+        return jsonify({
+            'error': 'Question or Answer missing',
+            'output': 'Question or Answer missing. '
+                      'Make sure that both the question and an answer are provided'
+        }, 406)
+    if question_valid != "":
+        return jsonify({
+            'error': 'Question Format error',
+            'output': 'There was something wrong with the format of the question. Error: ' + question_valid
+        }, 406)
+
+    prompt_config = check_answer_prompt(question, user_answer)
+
+    response = make_chatgpt_request(prompt_config)
+
+    # chatgpt returns an JSON object with the answer to make it accessible in the frontend, the string is converted
+    # to a python dictionary and then placed in the response
+    evaluation = response['text']
+
+    # converting the answer string to a python dict
+    try:
+        evaluation_dict = json.loads(evaluation)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Failed to parse response: {evaluation}") from e
+
+    response = {
+        "text": evaluation_dict,
+        "user": False
+    }
+
+    return jsonify(response)
 
 
 # todo

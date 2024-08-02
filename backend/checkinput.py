@@ -1,7 +1,7 @@
-def validate_input(code, question):
-    if not code:
+def validate_input(param1, param2):
+    if not param1:
         return False
-    if not question:
+    if not param2:
         return False
     return True
 
@@ -13,5 +13,16 @@ def add_feedback(feedback):
             f"means i did not understand at all and 5 means i understood fully. Adjust the next response "
             f"accordingly. User Rating: {feedback}.")
         return feedback_string
+    else:
+        return ""
+
+
+def validate_question(question):
+    if not isinstance(question, dict):
+        return "question must be a dictionary"
+    if "text" not in question or not isinstance(question["text"], str):
+        return "question['text'] must be a string"
+    if "answers" not in question or not isinstance(question["answers"], list):
+        return "question['answers'] must be a list"
     else:
         return ""

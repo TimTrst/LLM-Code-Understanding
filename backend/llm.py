@@ -31,12 +31,12 @@ def make_chatgpt_request(prompt_config):
         )
 
         if response:
-            return jsonify({
+            return {
                 'text': response.choices[0].message.content,
                 'user': False
-            })
+            }
         else:
-            return jsonify({'error': 'Something went wrong while trying to get an answer from openai'})
+            return {'error': 'Something went wrong while trying to get an answer from openai'}
 
     except Exception as e:
         print("An error occurred:", str(e))
