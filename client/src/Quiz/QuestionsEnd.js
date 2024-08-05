@@ -1,82 +1,118 @@
 const questionsEnd = [
     {
-        id: 0,
-        type: "MC",
-        heading: "## Q1.1: Termination of recursive function",
-        text: "### **Question**\nHow does a recursive function terminate?",
-        answers: [
-            {id: 0, text: 'When it completes a fixed number of iterations.', misconception: 'test', isCorrect: false},
-            {id: 1, text: 'When it reaches its base case.', misconception: 'test', isCorrect: true},
-            {id: 2, text: 'When the operating system stops it.', misconception: 'test', isCorrect: false},
-            {id: 3, text: 'When it runs out of memory.', misconception: 'test', isCorrect: false},
-        ],
-    },
-    {
-        id: 1,
-        type: "MC",
-        heading: "## Q1.2: Absence of base case",
-        text: "### **Question**\nWhat happens if a recursive function does not have a base case?",
-        answers: [
-            {id: 0, text: 'It will compile but not run.', misconception: 'test', isCorrect: false},
-            {id: 1, text: 'It will result in infinite recursion.', misconception: 'test', isCorrect: true},
-            {id: 2, text: 'It will return a default value.', misconception: 'test', isCorrect: false},
-            {id: 3, text: 'It will behave like a normal function.', misconception: 'test', isCorrect: false},
-        ],
-    },
-    {
-        id: 2,
-        type: "MC",
-        heading: "## Q1.3: Direct vs Indirect recursion",
-        text: "### **Question**\nWhat is the difference between direct and indirect recursion?",
-        answers: [
+        "id": 0,
+        "type": "MC",
+        "heading": "## Q1: Base Case in Recursion",
+        "text": "### **Question**\nWhich of the following are true regarding the base case in recursive functions?",
+        "answers": [
             {
-                id: 0,
-                text: 'Direct recursion involves a function calling itself, while indirect recursion involves a function being called by another function.',
-                misconception: 'test',
-                isCorrect: true
+                "id": 0,
+                "text": "The base case should come before the recursive call in the function.",
+                "misconception": "BCbeforeRecursiveCase",
+                "isCorrect": false
             },
             {
-                id: 1,
-                text: 'Direct recursion is faster than indirect recursion.',
-                misconception: 'test',
-                isCorrect: false
+                "id": 1,
+                "text": "The base case is necessary to terminate recursion.",
+                "misconception": "",
+                "isCorrect": true
             },
             {
-                id: 2,
-                text: 'Indirect recursion is always more complex than direct recursion.',
-                misconception: 'test',
-                isCorrect: false
+                "id": 2,
+                "text": "A base case will always run regardless of whether the problem size is reduced.",
+                "misconception": "InfiniteExecution",
+                "isCorrect": false
             },
-            {id: 3, text: 'There is no difference; they are the same.', misconception: 'test', isCorrect: false},
-        ],
-    },
-    {
-        id: 3,
-        type: "MC",
-        heading: "## Q2.3: Recursive sum function",
-        text: "### **Question**\nWhat value will be returned by the following function call: `sumDigits(1234)`?\n```java\nint sumDigits(int n) {\n if (n == 0) return 0;\n else return n % 10 + sumDigits(n / 10);\n}\n```",
-        answers: [
-            {id: 1, text: '10', misconception: 'test', isCorrect: false},
-            {id: 2, text: '1234', misconception: 'test', isCorrect: false},
-            {id: 3, text: '1', misconception: 'test', isCorrect: false},
-            {id: 4, text: '10', misconception: 'test', isCorrect: true},
-            {id: 5, text: 'Infinite recursion', misconception: 'test', isCorrect: false},
-        ],
-    },
-    {
-        id: 4,
-        type: "EXPLAIN",
-        heading: "## Q2.2: Recursive function to find maximum value",
-        text: "### **Question**\nWrite a recursive function to find the maximum value in an array.\n```java\nint findMax(int[] arr, int n) {\n if (n == 1) return arr[0];\n else return Math.max(arr[n-1], findMax(arr, n - 1));\n}\n```\nExplain how this function works and what it returns for the array `[1, 5, 3, 9, 2]`.",
-        answers: [
             {
-                id: 0,
-                text: 'The function works by comparing the last element of the array with the maximum of the rest of the array. It returns 9 for the given array.',
-                misconception: 'test',
-                isCorrect: true
-            },
-        ],
+                "id": 3,
+                "text": "Recursive functions can have more than one base case.",
+                "misconception": "",
+                "isCorrect": true
+            }
+        ]
     },
+    {
+        "id": 1,
+        "type": "MC",
+        "heading": "## Q2: Execution of Statements After Recursive Call",
+        "text": "### **Question**\nWhich of the following statements correctly describe what happens after a recursive call?",
+        "answers": [
+            {
+                "id": 0,
+                "text": "Statements after the recursive call will not execute.",
+                "misconception": "BFneverExecute",
+                "isCorrect": false
+            },
+            {
+                "id": 1,
+                "text": "Only the base case will execute statements after the recursive call.",
+                "misconception": "",
+                "isCorrect": false
+            },
+            {
+                "id": 2,
+                "text": "After recursion starts to return, statements following the recursive call will execute.",
+                "misconception": "",
+                "isCorrect": true
+            },
+            {
+                "id": 3,
+                "text": "Statements after the recursive call execute before the recursion happens.",
+                "misconception": "BFexecuteBefore",
+                "isCorrect": false
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "type": "MC",
+        "heading": "## Q3: Recursive PrintElements",
+        "text": "### **Question**\nConsider the following function:\n```java\nvoid PrintElements(int[] B, int m) {\n  if (m > 0) {\n    PrintElements(B, m - 1);\n    System.out.print(B[m]);\n  }\n}\n```\nWhat will be printed when `PrintElements(B, 5)` is executed, with array `B` initialized so that position `B[i]` stores value `i`? Write a sequence of numbers that will be printed, or write \"nothing\" if you think that it will print nothing. Write \"infinite recursion\" if you think that the call will lead to infinite recursion.",
+        "answers": [
+            {
+                "id": 0,
+                "text": "1 2 3 4 5",
+                "misconception": "",
+                "isCorrect": true
+            },
+            {
+                "id": 1,
+                "text": "1 2 3 4",
+                "misconception": "BCevaluation",
+                "isCorrect": false
+            },
+            {
+                "id": 2,
+                "text": "0 1 2 3 4",
+                "misconception": "BCevaluation",
+                "isCorrect": false
+            },
+            {
+                "id": 3,
+                "text": "0 1 2 3 4 5",
+                "misconception": "BCevaluation",
+                "isCorrect": false
+            },
+            {
+                "id": 4,
+                "text": "5 4 3 2 1",
+                "misconception": "BFexecuteBefore",
+                "isCorrect": false
+            },
+            {
+                "id": 5,
+                "text": "nothing",
+                "misconception": "",
+                "isCorrect": false
+            },
+            {
+                "id": 6,
+                "text": "infinite recursion",
+                "misconception": "",
+                "isCorrect": false
+            }
+        ]
+    }
 ]
 
 export default questionsEnd
