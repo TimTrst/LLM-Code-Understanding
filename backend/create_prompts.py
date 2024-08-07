@@ -103,11 +103,31 @@ def check_answer_prompt(question, user_answer):
     Student's Answer: "{user_answer}"
 
     Return the evaluation in the following JSON format: {{ "correct": True/False, "misconception": [use the 
-    misconceptions names (only provide the names in this array) without descriptions from the provided context based on the provided student answer. Leave 
-    array empty if none match.] }} """,
+    misconceptions names (only provide the names in this array) without descriptions from the provided context based 
+    on the provided student answer. Leave array empty if none match or if the question was correctly answered.] }} """,
 
         "temperature": temperature,
         "max_tokens": max_tokens,
+    }
+
+    return prompt_config
+
+
+def analyse_results_prompt(misconceptions):
+    max_tokens = 500
+    temperature = 0.5
+
+    prompt_config = {
+        "prompt": f""" You are a tutor assessing a student's understanding of recursion. Directly address the 
+        student. Based on a quiz before and after the use of a learning system, the following misconceptions that the 
+        student might be struggling with have been identified. Match the misconceptions with the given misconceptions 
+        in context. Return an evaluation explaining what the user is struggling with and what they may not 
+        understand. Don't mention the exact misconception but explain what this means for the student. 
+        Return the evaluation in JSON format: 
+        {{ "result": insert evaluation here }}. Only provide the JSON in the response. These are the misconceptions: 
+        {misconceptions}""",
+        "temperature": temperature,
+        "max_tokens": max_tokens
     }
 
     return prompt_config

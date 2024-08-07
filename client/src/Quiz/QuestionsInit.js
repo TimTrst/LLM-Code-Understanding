@@ -63,81 +63,105 @@ const questionsInit = [
             }
         ]
     },
-{
-    "id": 2,
-    "type": "MC",
-    "heading": "## Q3: Recursive PrintArray",
-    "text": "### **Question**\nConsider the following function:\n```java\nvoid PrintArray(int[] A, int n) {\n  if (n > 0) {\n    PrintArray(A, n - 1);\n    System.out.print(A[n]);\n  }\n}\n```\nWhat will be printed when `PrintArray(A, 5)` is executed, with array `A` initialized so that position `A[i]` stores value `i`? Write a sequence of numbers that will be printed, or write \"nothing\" if you think that it will print nothing. Write \"infinite recursion\" if you think that the call will lead to infinite recursion.",
-    "answers": [
-        {
-            "id": 0,
-            "text": "1 2 3 4 5",
-            "misconception": "",
-            "isCorrect": true
-        },
-        {
-            "id": 1,
-            "text": "1 2 3 4",
-            "misconception": "BCevaluation",
-            "isCorrect": false
-        },
-        {
-            "id": 2,
-            "text": "0 1 2 3 4",
-            "misconception": "BCevaluation",
-            "isCorrect": false
-        },
-        {
-            "id": 3,
-            "text": "0 1 2 3 4 5",
-            "misconception": "BCevaluation",
-            "isCorrect": false
-        },
-        {
-            "id": 4,
-            "text": "5 4 3 2 1",
-            "misconception": "BFexecuteBefore",
-            "isCorrect": false
-        },
-        {
-            "id": 5,
-            "text": "nothing",
-            "misconception": "",
-            "isCorrect": false
-        },
-        {
-            "id": 6,
-            "text": "infinite recursion",
-            "misconception": "",
-            "isCorrect": false
-        }
-    ]
-},
     {
-        id: 3,
-        type: "MC",
-        heading: "## Q4: Recursive function calls",
-        text: "### **Question**\nWhat values are returned by the following function calls: `function1(2, 3)` and `function2(2, 3)`?\n```java\nint function1(int a, int b) {\n if (a == b) return a;\n else return function1(a, b - 1) + b;\n}\n\nint function2(int x, int y) {\n if (x > 1) return function2(x - 1, y) + y;\n else return y;\n}\n```",
-        answers: [
-            {id: 0, text: '3 and 3', misconception: 'test', isCorrect: false},
-            {id: 1, text: '5 and 6', misconception: 'test', isCorrect: true},
-            {id: 2, text: 'Infinite recursion and 3', misconception: 'test', isCorrect: false},
-            {id: 3, text: '5 and Infinite recursion', misconception: 'test', isCorrect: false},
-        ],
+        "id": 2,
+        "type": "MC",
+        "heading": "## Q3: Recursive PrintArray",
+        "text": "### **Question**\nConsider the following function:\n```python\ndef print_array(A, n):\n  if n > 0:\n    print_array(A, n - 1)\n    print(A[n], end=' ')\n```\nWhat will be printed when `print_array(A, 5)` is executed, with array `A` initialized so that position `A[i]` stores value `i`? Write a sequence of numbers that will be printed, or write \"nothing\" if you think that it will print nothing. Write \"infinite recursion\" if you think that the call will lead to infinite recursion.",
+        "answers": [
+            {
+                "id": 0,
+                "text": "1 2 3 4 5",
+                "misconception": "",
+                "isCorrect": true
+            },
+            {
+                "id": 1,
+                "text": "1 2 3 4",
+                "misconception": "BCevaluation",
+                "isCorrect": false
+            },
+            {
+                "id": 2,
+                "text": "0 1 2 3 4",
+                "misconception": "BCevaluation",
+                "isCorrect": false
+            },
+            {
+                "id": 3,
+                "text": "0 1 2 3 4 5",
+                "misconception": "BCevaluation",
+                "isCorrect": false
+            },
+            {
+                "id": 4,
+                "text": "5 4 3 2 1",
+                "misconception": "BFexecuteBefore",
+                "isCorrect": false
+            },
+            {
+                "id": 5,
+                "text": "nothing",
+                "misconception": "",
+                "isCorrect": false
+            },
+            {
+                "id": 6,
+                "text": "infinite recursion",
+                "misconception": "",
+                "isCorrect": false
+            }
+        ]
     },
     {
-        id: 4,
-        type: "EXPLAIN",
-        heading: "## Q5: Recursive function to find the greatest common divisor (GCD)",
-        text: "### **Question**\n```java\nint gcd(int a, int b) {\n if (b == 0) return a;\n else return gcd(b, a % b);\n}\n```\nExplain how this function works and what it returns for the integers `48` and `18`.",
-        answers: [
+        "id": 3,
+        "type": "MC",
+        "heading": "## Q4: Backward Flow",
+        "text": "### **Question**\nGiven the following code:\n```python\ndef function(y):\n  if y == 1:\n    return 5\n  else:\n    function(y - 1)\n    y = y + 1\n    return 83\n```\nWhat will be returned when `function(2)` is executed? Write a number, or write \"infinite recursion\" if you think that this call will lead to infinite recursion.",
+        "answers": [
             {
-                id: 0,
-                text: 'The function works by repeatedly applying the Euclidean algorithm, which reduces the problem by replacing the pair (a, b) with (b, a % b) until b becomes 0. It returns 6 for the integers 48 and 18.',
-                misconception: 'test',
-                isCorrect: true
+                "id": 0,
+                "text": "83",
+                "misconception": "",
+                "isCorrect": true
             },
-        ],
+            {
+                "id": 1,
+                "text": "5",
+                "misconception": "BFneverExecute",
+                "isCorrect": false
+            },
+            {
+                "id": 2,
+                "text": "6",
+                "misconception": "RCnoReturnRequired",
+                "isCorrect": false
+            },
+            {
+                "id": 3,
+                "text": "infinite recursion",
+                "misconception": "BFexecuteBefore",
+                "isCorrect": false
+            },
+            {
+                "id": 4,
+                "text": "other",
+                "misconception": "",
+                "isCorrect": false
+            }
+        ]
+    },
+      {
+        "id": 4,
+        "type": "EXPLAIN",
+        "heading": "## Q5: Recursive Array Multiplication",
+        "text": "### **Question**\nConsider the following function:\n```python\ndef multiply_array(arr, n):\n    if n == 0:\n        return 1\n    else:\n        multiply_array(arr, n - 1)\n        return arr[n - 1] * multiply_array(arr, n - 1)\n```\nExplain what this function is intended to do and describe its behavior when `multiply_array([1, 2, 3, 4], 4)` is called. Identify any errors in the function and explain why they occur. If you think the function will lead to infinite recursion, explain why.",
+        "answers": [
+            {
+                "id": 0,
+                "text": "The function aims to multiply all elements of the array but contains an error. When `multiply_array([1, 2, 3, 4], 4)` is called, it will cause infinite recursion because the recursive call `multiply_array(arr, n - 1)` is made twice, and the statement `return arr[n - 1] * multiply_array(arr, n - 1)` means the second recursive call never reaches the base case."
+            }
+        ]
     }
 ];
 

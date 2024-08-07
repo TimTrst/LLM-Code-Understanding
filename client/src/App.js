@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, {useEffect, useState, useCallback} from 'react'
 import Ide from './IDE/Ide'
 import LLMChat from './LLMChat/LLMChat';
 import {Button, Container, Typography} from '@mui/material'
@@ -8,6 +8,7 @@ import axios from 'axios'
 import AlertNotification from './AlertNotification'
 import initialCode from './IDE/initialCode'
 import Quiz from "./Quiz/Quiz"
+import ResultComponent from "./Quiz/ResultComponent"
 
 function App() {
     const [inputCode, setInputCode] = useState('') // code string from the ide component
@@ -21,31 +22,78 @@ function App() {
 
     const [showPreQuiz, setShowPreQuiz] = useState(null)
     const [preQuizSubmitted, setPreQuizSubmitted] = useState(false)
-    const [preQuizResults, setPreQuizResults] = useState({answers:[], score:0})
+    const [preQuizResults, setPreQuizResults] = useState({answers: [], score: 0})
 
     const [showPostQuiz, setShowPostQuiz] = useState(false)
     const [postQuizSubmitted, setPostQuizSubmitted] = useState(null)
-    const [postQuizResult, setPostQuizResult] = useState({answers:[], score:0})
+    const [postQuizResults, setPostQuizResults] = useState({answers: [], score: 0})
 
     useEffect(() => {
         // Set the initial code when the component mounts
         setInputCode(initialCode)
     }, [])
 
-    //Remove these use effects after implementing the results
+
+    //TODO entfernen, wenn testen/zeigen abgeschlossen
     useEffect(() => {
         console.log(preQuizResults)
-    },[preQuizResults])
+        console.log(postQuizResults)
+    }, [preQuizSubmitted])
 
-    useEffect(() => {
-        console.log("Score initial: " + preQuizResults.score)
-        console.log("Score post: " + postQuizResult.score)
-
-    }, [postQuizSubmitted, postQuizResult])
-
-    useEffect(() => {
-        //console.log("RESULTS " + preQuizResults)
-    }, [showPreQuiz, preQuizSubmitted]);
+    //TODO entfernen, wenn testen/zeigen abgeschlossen
+    const testingObject= {
+    "multiple_choice_answers": {
+        "0": [
+            {
+                "id": 0,
+                "text": "The base case should come before the recursive call in the function.",
+                "misconception": "BCbeforeRecursiveCase",
+                "isCorrect": false
+            }, {
+                "id": 1,
+                "text": "The base case is necessary to terminate recursion.",
+                "misconception": "",
+                "isCorrect": true
+            },
+        ],
+        "1": [
+            {
+                "id": 1,
+                "text": "Statements after the recursive call will execute only if the base case is met first.",
+                "misconception": "",
+                "isCorrect": false
+            }
+        ],
+        "2": [
+            {
+                "id": 0,
+                "text": "1 2 3 4 5",
+                "misconception": "",
+                "isCorrect": true
+            }
+        ],
+        "3": [
+            {
+                "id": 3,
+                "text": "infinite recursion",
+                "misconception": "BFexecuteBefore",
+                "isCorrect": false
+            }
+        ]
+    },
+    "explain_answers": {
+        "4": {
+            "answer": "This recursive function intends to multiply each element in an array. This function has an error: The recursive function is called twice, which will not return the expected result.",
+            "isCorrect": false
+        }
+    },
+    "score": 1,
+    "misconceptions": [
+        "BCbeforeRecursiveCase",
+        "BFexecuteBefore",
+        "InfiniteExecution"
+    ]
+}
 
     // Function to check if conditions are met before allowing an api request to be sent
     // request: a valid request string to chatgpt (promptless/manual)
@@ -75,17 +123,17 @@ function App() {
     }, [])
 
     const isValidResponse = useCallback((requestResponse) => {
-        if ('error' in requestResponse){
-             setResponse({text: 'Something went wrong. Check the code.'})
-             if(requestResponse['error'] === 'Compilation unsuccessful'){
-                 setAlertSeverity('error')
-                 setAlertMessage('An error occurred while trying to compile the code at ' + requestResponse['output'])
-             }else{
-                  setAlertSeverity('error')
-                 setAlertMessage('unknown error occurred')
-             }
-             return false
-        }else{
+        if ('error' in requestResponse) {
+            setResponse({text: 'Something went wrong. Check the code.'})
+            if (requestResponse['error'] === 'Compilation unsuccessful') {
+                setAlertSeverity('error')
+                setAlertMessage('An error occurred while trying to compile the code at ' + requestResponse['output'])
+            } else {
+                setAlertSeverity('error')
+                setAlertMessage('unknown error occurred')
+            }
+            return false
+        } else {
             return true
         }
     }, [])
@@ -97,10 +145,10 @@ function App() {
             const isValid = checkRequest(promptlessTopic, inputCode)
             if (isValid) {
                 setResponseReceived(false)
-                const requestResponse = await axios.post('api/explain-prompts', { promptlessTopic, inputCode, feedback })
+                const requestResponse = await axios.post('api/explain-prompts', {promptlessTopic, inputCode, feedback})
                 setResponseReceived(true)
 
-                if(isValidResponse(requestResponse.data)){
+                if (isValidResponse(requestResponse.data)) {
                     setResponse(requestResponse.data)
                 }
             }
@@ -116,9 +164,9 @@ function App() {
             const isValid = checkRequest(manualTopic, inputCode)
             if (isValid) {
                 setResponseReceived(false)
-                const requestResponse = await axios.post('api/manual-prompts', { manualTopic, inputCode })
+                const requestResponse = await axios.post('api/manual-prompts', {manualTopic, inputCode})
                 setResponseReceived(true)
-                if(isValidResponse(requestResponse.data)){
+                if (isValidResponse(requestResponse.data)) {
                     setResponse(requestResponse.data)
                 }
             }
@@ -149,55 +197,60 @@ function App() {
     const handleYes = () => setShowPreQuiz(true)
     const handleNo = () => setShowPreQuiz(false)
 
-    if(showPreQuiz === null){
+    if (showPreQuiz === null) {
         return (
-            <Container style={{ display: 'flex', flexDirection: 'column', alignItems:'center', justifyContent: 'center',
-            height:'100vh', textAlign:'center'}}>
+            <Container style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                height: '100vh', textAlign: 'center'
+            }}>
                 <Typography>Do you want to do an initial Quiz?</Typography>
-                 <Container sx={{my:4}}>
-                  <Button onClick={handleYes} sx={{mx:2}}>Yes</Button>
-                  <Button onClick={handleNo} >No</Button>
+                <Container sx={{my: 4}}>
+                    <Button onClick={handleYes} sx={{mx: 2}}>Yes</Button>
+                    <Button onClick={handleNo}>No</Button>
                 </Container>
             </Container>
         )
     }
 
-    if(showPostQuiz && !postQuizSubmitted){
+    if (showPostQuiz && !postQuizSubmitted) {
         return (
-             <Quiz setQuizSubmitted={setPostQuizSubmitted} setQuizResults={setPostQuizResult} quizType={'ending'}/>
+            <Quiz setQuizSubmitted={setPostQuizSubmitted} setQuizResults={setPostQuizResults} quizType={'ending'}/>
         )
     }
 
     return (
-        <div className="App" style={{ display: 'flex', flexDirection: 'row' }}>
+        <div className="App" style={{display: 'flex', flexDirection: 'row'}}>
             {(!preQuizSubmitted && showPreQuiz) ? <Quiz setQuizSubmitted={setPreQuizSubmitted}
-                                                       setQuizResults={setPreQuizResults} quizType={'initial'}/> :
-            <Container sx={{ display: 'flex', flexDirection: 'column', height: '100%', mt: 10 }}>
-                <Typography variant="h1" sx={{ my: 4, textAlign: 'center', color: 'secondary.main' }}>
-                    Promptelix
-                </Typography>
-                <Ide inputCode={inputCode} setInputCode={setInputCode} />
-                <PromptlessInteraction
-                    handlePromptlessRequest={handlePromptlessRequest}
-                    setPromptlessTextForChat={setPromptlessTextForChat}
-                    responseReceived={responseReceived}
-                    setFeedback={setFeedback}
-                />
-                <LLMChat
-                    response={response}
-                    promptlessTextForChat={promptlessTextForChat}
-                    handleManualRequest={handleManualRequest}
-                    responseReceived={responseReceived}
-                    requestFailed={requestFailed}
-                    handleDelete={handleDelete}
-                />
-                {alertMessage && (
-                    <AlertNotification message={alertMessage} severity={alertSeverity} />
-                )}
-                {preQuizSubmitted &&
-                    <Button onClick={handleShowEndingQuiz}><QuizIcon/></Button>
-                }
-            </Container>}
+                                                        setQuizResults={setPreQuizResults} quizType={'initial'}/> :
+                <Container sx={{display: 'flex', flexDirection: 'column', height: '100%', mt: 10}}>
+                    <Typography variant="h1" sx={{my: 4, textAlign: 'center', color: 'secondary.main'}}>
+                        Promptelix
+                    </Typography>
+                    <Ide inputCode={inputCode} setInputCode={setInputCode}/>
+                    <PromptlessInteraction
+                        handlePromptlessRequest={handlePromptlessRequest}
+                        setPromptlessTextForChat={setPromptlessTextForChat}
+                        responseReceived={responseReceived}
+                        setFeedback={setFeedback}
+                    />
+                    <LLMChat
+                        response={response}
+                        promptlessTextForChat={promptlessTextForChat}
+                        handleManualRequest={handleManualRequest}
+                        responseReceived={responseReceived}
+                        requestFailed={requestFailed}
+                        handleDelete={handleDelete}
+                    />
+                    {alertMessage && (
+                        <AlertNotification message={alertMessage} severity={alertSeverity}/>
+                    )}
+                    {preQuizSubmitted && !postQuizSubmitted &&
+                        <Button onClick={handleShowEndingQuiz}><QuizIcon/></Button>
+                    }
+                    {//postQuizSubmitted &&
+                        <ResultComponent preQuizResults={testingObject} postQuizResults={testingObject} />
+                    }
+                </Container>}
         </div>
     )
 }

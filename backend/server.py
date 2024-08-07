@@ -3,15 +3,14 @@ import json
 from flask import Flask, request, jsonify
 import datetime
 from compilecode import check_if_compilable
-from checkinput import validate_input, add_feedback, validate_question
-from create_prompts import base_prompts, manual_prompt, check_answer_prompt
+from helper import validate_input, add_feedback, validate_question, json_string_to_python_dict
+from create_prompts import base_prompts, manual_prompt, check_answer_prompt, analyse_results_prompt
 from llm import make_chatgpt_request
 from config import Config
 
 app = Flask(__name__)
 
 app.config.from_object(Config)
-
 
 
 @app.route('/')
@@ -108,24 +107,37 @@ def check_quiz_answers():
 
     prompt_config = check_answer_prompt(question, user_answer)
 
-    response = make_chatgpt_request(prompt_config)
+    gpt_response = make_chatgpt_request(prompt_config)
 
     # chatgpt returns an JSON object with the answer to make it accessible in the frontend, the string is converted
     # to a python dictionary and then placed in the response
-    evaluation = response['text']
+    gpt_evaluation = gpt_response['text']
 
-    # converting the answer string to a python dict
-    try:
-        evaluation_dict = json.loads(evaluation)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Failed to parse response: {evaluation}") from e
+    # converting the json answer string to a python dict
+    evaluation_dict = json_string_to_python_dict(gpt_evaluation)
 
-    response = {
-        "text": evaluation_dict,
-        "user": False
-    }
+    return jsonify(evaluation_dict)
 
-    return jsonify(response)
+
+@app.route('/analyse-quiz-results', methods=['POST'])
+def analyse_quiz_results():
+    misconceptions = request.json['misconceptions']
+
+    if not misconceptions:
+        return jsonify({
+            'error': 'Misconceptions are missing',
+            'output': 'Misconceptions are missing',
+        }, 406)
+
+    prompt_config = analyse_results_prompt(misconceptions)
+
+    gpt_response = make_chatgpt_request(prompt_config)
+
+    gpt_evaluation = gpt_response['text']
+
+    evaluation_dict = json_string_to_python_dict(gpt_evaluation)
+
+    return jsonify(evaluation_dict)
 
 
 # todo

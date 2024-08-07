@@ -25,7 +25,13 @@ const ManualInput = ({handleManualSend}) => {
             }}>
                 <TextField id="standard-basic" label="Enter your questions here" variant="standard" multiline fullWidth
                            minRows={3} maxRows={3}
-                           InputProps={{disableUnderline: true}} value={inputText}
+                           InputProps={{
+                        disableUnderline: true,
+                        sx: { '& .MuiInputBase-input': { color: 'white' } }
+                    }}
+                    inputProps={{
+                        maxLength: 600
+                    }} value={inputText}
                            onChange={(event) => setInputText(event.target.value)}
                 >
                 </TextField>

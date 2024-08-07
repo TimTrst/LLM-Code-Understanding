@@ -1,3 +1,6 @@
+import json
+
+
 def validate_input(param1, param2):
     if not param1:
         return False
@@ -26,3 +29,17 @@ def validate_question(question):
         return "question['answers'] must be a list"
     else:
         return ""
+
+
+def json_string_to_python_dict(json_string):
+    try:
+        python_dict = json.loads(json_string)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Failed to parse response: {json_string}") from e
+
+    response = {
+        "text": python_dict,
+        "user": False
+    }
+
+    return response

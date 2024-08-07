@@ -4,7 +4,6 @@ import questionsInit from "./QuestionsInit"
 import questionsEnd from "./QuestionsEnd"
 import Question from "./Question"
 import {Button, Container, Paper, Typography} from "@mui/material"
-import LoopIcon from '@mui/icons-material/Loop'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import Toolbar from "@mui/material/Toolbar"
@@ -12,8 +11,8 @@ import Divider from "@mui/material/Divider"
 import remarkGfm from "remark-gfm"
 import ReactMarkdown from "react-markdown"
 import axios from "axios"
-import Box from "@mui/material/Box";
-import AlertNotification from "../AlertNotification";
+import AlertNotification from "../AlertNotification"
+import LoadingIcon from "./LoadingIcon";
 
 const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -60,7 +59,6 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
         }else{
             setAllQuestionsAnswered(true)
         }
-
 
         setEvaluationStarted(true)
 
@@ -161,32 +159,6 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
         }
     }
 
-    const renderLoadingIcon = () => {
-        return (
-            <Box>
-                <Box display="flex"
-                     justifyContent="center"
-                     alignItems="center"
-                     minHeight="40vh">
-                    <LoopIcon fontSize="large" sx={{
-                        animation: "spin 2s linear infinite",
-                        "@keyframes spin": {
-                            "0%": {
-                                transform: "rotate(360deg)",
-                            },
-                            "100%": {
-                                transform: "rotate(0deg)",
-                            },
-                        },
-                    }}/>
-                </Box>
-                <Typography sx={{display: "clear"}}>
-                    Answers are currently being processed...
-                </Typography>
-            </Box>
-        )
-    }
-
     const renderQuizPaper = () => {
         return (
             <Paper elevation={3} sx={{width: 750, height: "fit-content", backgroundColor: 'primary.main'}}>
@@ -231,7 +203,7 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
             boxSizing: 'border-box',
         }}>
             <Typography variant="h1" sx={{my: 3}}>{quizType === "initial" ? "Initial Quiz" : "Ending Quiz"}</Typography>
-            {evaluationStarted ? renderLoadingIcon() : renderQuizPaper()}
+            {evaluationStarted ? <LoadingIcon /> : renderQuizPaper()}
         </Container>
     )
 }
