@@ -34,7 +34,7 @@ function Ide({inputCode, setInputCode}) {
             >
                 <MenuItem value="python">Python</MenuItem>
             </Select>
-            <Paper elevation={3} sx={{my: 2, px: 4, py: 4, backgroundColor: "fourthColor.main", borderRadius: 3}}>
+            <Paper elevation={3} sx={{my: 4, px: 4, py: 4, backgroundColor: "fourthColor.main", borderRadius: 3}}>
                 <Box className={"custom-border"}>
                     <Box sx={{backgroundColor: "black", padding: 1, borderRadius: 2}}>
                         <CodeMirror

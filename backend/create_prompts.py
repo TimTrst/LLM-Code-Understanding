@@ -58,15 +58,22 @@ def base_prompts(topic, user_input, feedback):
     prompt_config = {
         "prompt": (
                 "You are a tutor helping a student understand recursive functions in computer science. "
+                "---"
+                "YOUR MAIN TASK: "
                 + sub_prompt +
+                "---"
+                "ADDITIONAL INFORMATION: "
                 "Highlight the base case and recursive "
-                "case. Explain"
-                "how the recursive calls work by providing an ASCII-art visual representation of the call stack's "
-                "active and passive flow."
+                "case. Explain how the recursive calls work by providing an ASCII-art visual representation of the "
+                "call stack's active and passive flow. "
                 + feedback +
-                " Code snippet: ``` " + user_input + " ```. "
-                                                     "Don't copy the whole code snippet in the answer, if needed, provide only parts."
-                                                     "Maximum tokens: 500"
+                "---"
+                "CODE: "
+                "Code snippet: ``` " + user_input + " ```. "
+                "CLOSING REMARKS"
+                "Don't copy the whole code snippet in the answer, if needed, provide only parts. Maximum tokens: 600. "                                    
+                "Provide a clear and understandable explanation of the code for the novice programming student, "
+                "who is currently learning about recursion."
         ),
         "temperature": temperature,
         "max_tokens": max_tokens,
@@ -97,11 +104,9 @@ def check_answer_prompt(question, user_answer):
     prompt_config = {
         "prompt": f"""
     Evaluate the following student's answer to a quiz question.
-
     Question: "{question_extracted}"
     Correct Answer: "{correct_answer}"
     Student's Answer: "{user_answer}"
-
     Return the evaluation in the following JSON format: {{ "correct": True/False, "misconception": [use the 
     misconceptions names (only provide the names in this array) without descriptions from the provided context based 
     on the provided student answer. Leave array empty if none match or if the question was correctly answered.] }} """,

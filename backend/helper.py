@@ -12,9 +12,12 @@ def validate_input(param1, param2):
 def add_feedback(feedback):
     if feedback != 0:
         feedback_string = (
-            f"The User rated your last response in terms of understandability on a scale from 1 to 5. 1 "
-            f"means i did not understand at all and 5 means i understood fully. Adjust the next response "
-            f"accordingly. User Rating: {feedback}.")
+            f"---\n"
+            f"USER FEEDBACK:\n"
+            f"The User rated your last response in terms of understandability on a scale from 1 to 5. "
+            f"1 means I did not understand at all and 5 means I understood fully. Adjust the next response "
+            f"accordingly. User Rating: {feedback}."
+        )
         return feedback_string
     else:
         return ""

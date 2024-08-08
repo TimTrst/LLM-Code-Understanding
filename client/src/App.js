@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react'
+import React, {useEffect, useState, useCallback, useRef} from 'react'
 import Ide from './IDE/Ide'
 import LLMChat from './LLMChat/LLMChat';
 import {Button, Container, Typography} from '@mui/material'
@@ -28,11 +28,16 @@ function App() {
     const [postQuizSubmitted, setPostQuizSubmitted] = useState(null)
     const [postQuizResults, setPostQuizResults] = useState({answers: [], score: 0})
 
+    const quizResultEndRef = useRef(null);
+
     useEffect(() => {
         // Set the initial code when the component mounts
         setInputCode(initialCode)
     }, [])
 
+    useEffect(() => {
+        scrollToBottom()
+    }, [postQuizSubmitted])
 
     //TODO entfernen, wenn testen/zeigen abgeschlossen
     useEffect(() => {
@@ -193,6 +198,10 @@ function App() {
         }
     }, [])
 
+    const scrollToBottom = () => {
+        quizResultEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+
     const handleShowEndingQuiz = () => setShowPostQuiz(true)
     const handleYes = () => setShowPreQuiz(true)
     const handleNo = () => setShowPreQuiz(false)
@@ -223,6 +232,10 @@ function App() {
             {(!preQuizSubmitted && showPreQuiz) ? <Quiz setQuizSubmitted={setPreQuizSubmitted}
                                                         setQuizResults={setPreQuizResults} quizType={'initial'}/> :
                 <Container sx={{display: 'flex', flexDirection: 'column', height: '100%', mt: 10}}>
+
+                    {/*TODO: Entfernen dieses Buttons!!!*/}
+                    <Button onClick={() => setPostQuizSubmitted(true)}>Test</Button>
+
                     <Typography variant="h1" sx={{my: 4, textAlign: 'center', color: 'secondary.main'}}>
                         Promptelix
                     </Typography>
@@ -247,8 +260,8 @@ function App() {
                     {preQuizSubmitted && !postQuizSubmitted &&
                         <Button onClick={handleShowEndingQuiz}><QuizIcon/></Button>
                     }
-                    {//postQuizSubmitted &&
-                        <ResultComponent preQuizResults={testingObject} postQuizResults={testingObject} />
+                    {postQuizSubmitted &&
+                        <div ref={quizResultEndRef}><ResultComponent preQuizResults={testingObject} postQuizResults={testingObject} /></div>
                     }
                 </Container>}
         </div>
