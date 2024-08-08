@@ -150,7 +150,7 @@ function App() {
             const isValid = checkRequest(promptlessTopic, inputCode)
             if (isValid) {
                 setResponseReceived(false)
-                const requestResponse = await axios.post('api/explain-prompts', {promptlessTopic, inputCode, feedback})
+                const requestResponse = await axios.post('api/explain-prompts-with-validation', {promptlessTopic, inputCode, feedback})
                 setResponseReceived(true)
 
                 if (isValidResponse(requestResponse.data)) {

@@ -36,7 +36,12 @@ def validate_question(question):
 
 def json_string_to_python_dict(json_string):
     try:
-        python_dict = json.loads(json_string)
+        # Strip off any leading/trailing whitespace or formatting markers
+        cleaned_json_string = json_string.strip().replace('```json', '').replace('```', '').strip()
+
+        # Load the cleaned JSON string
+        python_dict = json.loads(cleaned_json_string)
+
     except json.JSONDecodeError as e:
         raise ValueError(f"Failed to parse response: {json_string}") from e
 
@@ -46,3 +51,22 @@ def json_string_to_python_dict(json_string):
     }
 
     return response
+
+
+def choose_best_gpt_answer(evaluation_dict):
+    highest_score = -1
+    best_explanation_id = 0
+
+    explanations = evaluation_dict.get('explanations', [])
+
+    for explanation in explanations:
+        # Extract the final score and ID
+        final_score = explanation.get('final_score', -1)
+        explanation_id = explanation.get('explanation_id', None)
+
+        # Update the highest score and ID if the current score is higher
+        if final_score > highest_score:
+            highest_score = final_score
+            best_explanation_id = explanation_id
+
+    return best_explanation_id

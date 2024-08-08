@@ -35,7 +35,7 @@ def make_chatgpt_request(prompt_config):
             max_tokens=prompt_config["max_tokens"]
         )
 
-        print(response.choices[0].message.content)
+        # print(response.choices[0].message.content)
 
         if response:
             return {
