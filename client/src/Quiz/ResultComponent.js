@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import {Card, Container, Grid, Paper, Typography} from "@mui/material"
 import ResultCard from "./ResultCard";
 import axios from "axios";
-import LoadingIcon from "./LoadingIcon";
+import LoadingIcon from "../LoadingIcon";
 import questionsInit from "./QuestionsInit";
 import questionsEnd from "./QuestionsEnd";
 

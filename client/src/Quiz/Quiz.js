@@ -12,7 +12,7 @@ import remarkGfm from "remark-gfm"
 import ReactMarkdown from "react-markdown"
 import axios from "axios"
 import AlertNotification from "../AlertNotification"
-import LoadingIcon from "./LoadingIcon";
+import LoadingIcon from "../LoadingIcon";
 
 const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)

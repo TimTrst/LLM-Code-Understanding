@@ -55,5 +55,5 @@ function Ide({inputCode, setInputCode}) {
 Ide.propTypes = {
     inputCode: PropTypes.string,
     setInputCode: PropTypes.func.isRequired,
-};
-export default Ide;
+}
+export default Ide

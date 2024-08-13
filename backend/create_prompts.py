@@ -124,7 +124,7 @@ def check_answer_prompt(question, user_answer):
 
 def analyse_results_prompt(misconceptions):
     max_tokens = 500
-    temperature = 0.5
+    temperature = 0.4
 
     prompt_config = {
         "prompt": f""" 
