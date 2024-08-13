@@ -6,7 +6,7 @@ import QuizIcon from '@mui/icons-material/Quiz'
 import PromptlessInteraction from './PromptlessInteraction/PromptlessInteraction'
 import axios from 'axios'
 import AlertNotification from './AlertNotification'
-import initialCode from './IDE/initialCode'
+import initialCode from './IDE/CodeExamples'
 import Quiz from "./Quiz/Quiz"
 import ResultComponent from "./Quiz/ResultComponent"
 
@@ -32,7 +32,7 @@ function App() {
 
     useEffect(() => {
         // Set the initial code when the component mounts
-        setInputCode(initialCode)
+        setInputCode(initialCode["factorial"].code)
     }, [])
 
     useEffect(() => {
