@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useCallback, useRef} from 'react'
 import Ide from './IDE/Ide'
 import LLMChat from './LLMChat/LLMChat';
-import {Button, Container, Typography} from '@mui/material'
+import {Button, Container, FormControlLabel, FormGroup, Switch, Typography} from '@mui/material'
 import QuizIcon from '@mui/icons-material/Quiz'
 import PromptlessInteraction from './PromptlessInteraction/PromptlessInteraction'
 import axios from 'axios'
@@ -9,6 +9,9 @@ import AlertNotification from './AlertNotification'
 import initialCode from './IDE/CodeExamples'
 import Quiz from "./Quiz/Quiz"
 import ResultComponent from "./Quiz/ResultComponent"
+import ArrowTooltipComponent from "./ArrowTooltip";
+import InfoIcon from "@mui/icons-material/Info";
+import Box from "@mui/material/Box";
 
 function App() {
     const [inputCode, setInputCode] = useState('') // code string from the ide component
@@ -30,6 +33,11 @@ function App() {
 
     const quizResultEndRef = useRef(null);
 
+    const [explainPromptType, setExplainPromptType] = useState("explain-prompts")
+
+    ///todo clean up the timer
+    const [responseTime, setResponseTime] = useState(null)
+
     useEffect(() => {
         // Set the initial code when the component mounts
         setInputCode(initialCode["factorial"].code)
@@ -45,60 +53,66 @@ function App() {
         console.log(postQuizResults)
     }, [preQuizSubmitted])
 
+    ///todo clean up timer
+    useEffect(() => {
+        console.log("API Request time in seconds:")
+        console.log(responseTime)
+    }, [responseTime]);
+
     //TODO entfernen, wenn testen/zeigen abgeschlossen
-    const testingObject= {
-    "multiple_choice_answers": {
-        "0": [
-            {
-                "id": 0,
-                "text": "The base case should come before the recursive call in the function.",
-                "misconception": "BCbeforeRecursiveCase",
-                "isCorrect": false
-            }, {
-                "id": 1,
-                "text": "The base case is necessary to terminate recursion.",
-                "misconception": "",
-                "isCorrect": true
-            },
-        ],
-        "1": [
-            {
-                "id": 1,
-                "text": "Statements after the recursive call will execute only if the base case is met first.",
-                "misconception": "",
+    const testingObject = {
+        "multiple_choice_answers": {
+            "0": [
+                {
+                    "id": 0,
+                    "text": "The base case should come before the recursive call in the function.",
+                    "misconception": "BCbeforeRecursiveCase",
+                    "isCorrect": false
+                }, {
+                    "id": 1,
+                    "text": "The base case is necessary to terminate recursion.",
+                    "misconception": "",
+                    "isCorrect": true
+                },
+            ],
+            "1": [
+                {
+                    "id": 1,
+                    "text": "Statements after the recursive call will execute only if the base case is met first.",
+                    "misconception": "",
+                    "isCorrect": false
+                }
+            ],
+            "2": [
+                {
+                    "id": 0,
+                    "text": "1 2 3 4 5",
+                    "misconception": "",
+                    "isCorrect": true
+                }
+            ],
+            "3": [
+                {
+                    "id": 3,
+                    "text": "infinite recursion",
+                    "misconception": "BFexecuteBefore",
+                    "isCorrect": false
+                }
+            ]
+        },
+        "explain_answers": {
+            "4": {
+                "answer": "This recursive function intends to multiply each element in an array. This function has an error: The recursive function is called twice, which will not return the expected result.",
                 "isCorrect": false
             }
-        ],
-        "2": [
-            {
-                "id": 0,
-                "text": "1 2 3 4 5",
-                "misconception": "",
-                "isCorrect": true
-            }
-        ],
-        "3": [
-            {
-                "id": 3,
-                "text": "infinite recursion",
-                "misconception": "BFexecuteBefore",
-                "isCorrect": false
-            }
+        },
+        "score": 1,
+        "misconceptions": [
+            "BCbeforeRecursiveCase",
+            "BFexecuteBefore",
+            "InfiniteExecution"
         ]
-    },
-    "explain_answers": {
-        "4": {
-            "answer": "This recursive function intends to multiply each element in an array. This function has an error: The recursive function is called twice, which will not return the expected result.",
-            "isCorrect": false
-        }
-    },
-    "score": 1,
-    "misconceptions": [
-        "BCbeforeRecursiveCase",
-        "BFexecuteBefore",
-        "InfiniteExecution"
-    ]
-}
+    }
 
     // Function to check if conditions are met before allowing an api request to be sent
     // request: a valid request string to chatgpt (promptless/manual)
@@ -146,11 +160,25 @@ function App() {
     // API request to make a promptless request to chat gpt
     // "promptlessTopic" are shortcuts indicating for the backend which prompt is requested
     const handlePromptlessRequest = useCallback(async (promptlessTopic) => {
+
+        ///todo clean up timer
+        const startTime = performance.now()
+
         try {
             const isValid = checkRequest(promptlessTopic, inputCode)
             if (isValid) {
                 setResponseReceived(false)
-                const requestResponse = await axios.post('api/explain-prompts-with-validation', {promptlessTopic, inputCode, feedback})
+                console.log(explainPromptType)
+                const requestResponse = await axios.post(`api/${explainPromptType}`, {
+                    promptlessTopic,
+                    inputCode,
+                    feedback
+                })
+                ///todo clean up timer
+                const endTime = performance.now()
+                const timeTaken = (endTime - startTime) / 1000 //time in seconds
+                setResponseTime(timeTaken)
+
                 setResponseReceived(true)
 
                 if (isValidResponse(requestResponse.data)) {
@@ -161,7 +189,7 @@ function App() {
             console.log('Error fetching the data:', error)
             setResponseReceived(true)
         }
-    }, [checkRequest, inputCode, feedback, isValidResponse])
+    }, [checkRequest, inputCode, feedback, explainPromptType, isValidResponse])
 
     // API request for "manual" requests to chatgpt (user can chat with own prompts)
     const handleManualRequest = useCallback(async (manualTopic) => {
@@ -199,7 +227,15 @@ function App() {
     }, [])
 
     const scrollToBottom = () => {
-        quizResultEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        quizResultEndRef.current?.scrollIntoView({behavior: "smooth"});
+    }
+
+    const handleSwitchUrl = () => {
+        if (explainPromptType === "explain-prompts") {
+            setExplainPromptType("explain-prompts-with-validation")
+        } else {
+            setExplainPromptType("explain-prompts")
+        }
     }
 
     const handleShowEndingQuiz = () => setShowPostQuiz(true)
@@ -232,13 +268,25 @@ function App() {
             {(!preQuizSubmitted && showPreQuiz) ? <Quiz setQuizSubmitted={setPreQuizSubmitted}
                                                         setQuizResults={setPreQuizResults} quizType={'initial'}/> :
                 <Container sx={{display: 'flex', flexDirection: 'column', height: '100%', mt: 10}}>
-
                     {/*TODO: Entfernen dieses Buttons!!! -> entfernen des test objects danach auch*/}
                     <Button onClick={() => setPostQuizSubmitted(true)}>Test</Button>
 
                     <Typography variant="h1" sx={{my: 4, textAlign: 'center', color: 'secondary.main'}}>
                         Promptelix
                     </Typography>
+                    <Box sx={{display: 'flex', alignItems: 'left', gap: 1}}>
+                        <FormGroup>
+                            <FormControlLabel control={<Switch checked={explainPromptType !== "explain-prompts"}
+                                                               onChange={handleSwitchUrl}/>}
+                                              label={"Validation"}></FormControlLabel>
+                        </FormGroup>
+                        <ArrowTooltipComponent title={"Enabling validation will result in significantly more tokens."}
+                                               placement={"top"}>
+                            <Box sx={{padding: 1}}>
+                                <InfoIcon/>
+                            </Box>
+                        </ArrowTooltipComponent>
+                    </Box>
                     <Ide inputCode={inputCode} setInputCode={setInputCode}/>
                     <PromptlessInteraction
                         handlePromptlessRequest={handlePromptlessRequest}
@@ -261,7 +309,8 @@ function App() {
                         <Button onClick={handleShowEndingQuiz}><QuizIcon/></Button>
                     }
                     {postQuizSubmitted &&
-                        <div ref={quizResultEndRef}><ResultComponent preQuizResults={testingObject} postQuizResults={testingObject} /></div>
+                        <div ref={quizResultEndRef}><ResultComponent preQuizResults={testingObject}
+                                                                     postQuizResults={testingObject}/></div>
                     }
                 </Container>}
         </div>

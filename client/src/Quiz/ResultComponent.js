@@ -11,7 +11,7 @@ import questionsEnd from "./QuestionsEnd";
 const ResultComponent = ({preQuizResults, postQuizResults}) => {
 
     const [quizEvaluation, setQuizEvaluation] = useState("")
-    //todo set to false for gpt evaluation
+    //todo set to false for gpt evaluation!!!!!!!
     const hasFetchedData = useRef(true)
     const [selectSummaryPre, setSelectSummaryPre] = useState({})
     const [explainSummaryPre, setExplainSummaryPre] = useState({})

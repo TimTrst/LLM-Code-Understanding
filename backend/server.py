@@ -77,6 +77,8 @@ def explain_prompts():
     user_input = request.json['inputCode']
     feedback = request.json['feedback']
 
+    print("no validation")
+
     # check if both code and a prompt exist
     is_valid = validate_input(user_input, topic)
 
@@ -120,6 +122,8 @@ def explain_prompts_with_validation():
     topic = request.json['promptlessTopic']
     user_input = request.json['inputCode']
     feedback = request.json['feedback']
+
+    print("with validation")
 
     # check if both code and a prompt exist
     is_valid = validate_input(user_input, topic)

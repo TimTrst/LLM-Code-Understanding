@@ -13,7 +13,12 @@ client = OpenAI(
     project=os.getenv('OPENAI_PROJECT_ID'),
 )
 
-model = "gpt-3.5-turbo"
+gpt_turbo = "gpt-3.5-turbo"
+gpt_4 = "gpt-4"
+gpt_4o = "gpt-4o"
+gpt_4o_mini = "gpt-4o-mini"
+
+model = gpt_turbo
 
 with open('misconceptions.json') as f:
     misconceptions = json.load(f)
@@ -22,6 +27,8 @@ with open('misconceptions.json') as f:
 def make_chatgpt_request(prompt_config):
     if not prompt_config:
         return jsonify({"error": "No prompt config provided"}), 400
+
+    print("Prompt fired")
 
     try:
         response = client.chat.completions.create(

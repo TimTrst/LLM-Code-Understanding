@@ -69,8 +69,10 @@ def base_prompts(topic, user_input, feedback):
                 "CODE: "
                 "Code snippet: ``` " + user_input + " ```. "
                                                     "CLOSING REMARKS"
-                                                    "Don't copy the whole code snippet in the answer, if needed, provide only parts. Maximum tokens: 600. "
-                                                    "Provide a clear and understandable explanation of the code for the novice programming student, "
+                                                    "Don't copy the whole code snippet in the answer, if needed, "
+                                                    "provide only parts. Maximum tokens: 600."
+                                                    "Provide a clear and understandable explanation of the code for "
+                                                    "the novice programming student,"
                                                     "who is currently learning about recursion."
         ),
         "temperature": temperature,
@@ -81,10 +83,20 @@ def base_prompts(topic, user_input, feedback):
 
 
 def manual_prompt(user_question, user_input):
-    max_tokens = 800
+    max_tokens = 600
 
     prompt_config = {
-        "prompt": user_question,
+        "prompt": ("You are a tutor, helping a student understand recursive functions in computer science. The "
+                   "student is asking you a question with a prompt they have formulated themselves. "
+                   "---"
+                   "STUDENT PROMPT: "
+                   + user_question +
+                   "---"
+                   "CODE CONTEXT: "
+                   "The user might ask questions about the following code that you should consider: " + user_input + " "
+                   "---"
+                   "CLOSING REMARKS: "
+                   "Use a maximum of 500 tokens in your answer."),
         "max_tokens": max_tokens,
         "temperature": 0.6
     }
@@ -189,7 +201,7 @@ def gpt_response_validation_prompt(gpt_responses):
                     {
                         "explanation_id": 1,
                         "criteria_scores": {
-                             "Clarity and Simplicity": 4,
+                            "Clarity and Simplicity": 4,
                             "Conceptual Understanding": 6,
                             "Appropriate Complexity": 5,
                             "Accuracy": 9,
