@@ -115,7 +115,7 @@ def base_prompts(topic, user_input, feedback):
                 "``` " + user_input + " ```. "
                                       "CLOSING REMARKS: "
                                       "Don't copy the whole code snippet in the answer, if needed, "
-                                      "provide only parts. Maximum tokens: 600. "
+                                      "provide only parts. Maximum tokens: 500. "
                                       "Provide a clear and understandable explanation of the stated "
                                       "problem for the novice programming student, "
                                       "who is currently learning about recursion."
