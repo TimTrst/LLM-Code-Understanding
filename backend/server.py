@@ -5,8 +5,8 @@ import datetime
 from compilecode import check_if_compilable
 from helper import validate_input, add_feedback, validate_question, json_string_to_python_dict, choose_best_gpt_answer
 from create_prompts import base_prompts, manual_prompt, check_answer_prompt, analyse_results_prompt, \
-    gpt_response_validation_prompt
-from llm import make_chatgpt_request
+    gpt_response_validation_prompt, test_prompt
+from llm import make_chatgpt_request, execute_requests_parallely
 from config import Config
 
 app = Flask(__name__)
@@ -42,6 +42,7 @@ def manual_prompts():
     user_question = request.json['manualTopic']
     user_input = request.json['inputCode']
 
+    # check if parameters exist
     is_valid = validate_input(user_input, user_question)
 
     if not is_valid:
@@ -49,6 +50,8 @@ def manual_prompts():
             'error': 'Input missing',
             'output': 'Question or Code missing'
         })
+
+    # see if the provided code is compilable (only compilable, not runnable/executable)
     compilation_result = check_if_compilable(user_input)
 
     if 'error' in compilation_result:
@@ -123,6 +126,7 @@ def explain_prompts_with_validation():
     user_input = request.json['inputCode']
     feedback = request.json['feedback']
 
+    # for debugging purposes, infinite loops are no joke
     print("with validation")
 
     # check if both code and a prompt exist
@@ -145,26 +149,40 @@ def explain_prompts_with_validation():
 
     # general prompt config with the full prompt, the temperature and max. token length in responses
     prompt_config = base_prompts(topic, user_input, feedback_string)
+    # prompt_config = test_prompt()
 
-    gpt_responses_array = []
-    for i in range(3):
-        # make the chatgpt request
-        response = make_chatgpt_request(prompt_config)
-        gpt_responses_array.append(response)
+    # enable this if the choice is sequential processing
+    # gpt_responses_array = []
+    # for i in range(3):
+    #    # make the chatgpt request
+    #    response = make_chatgpt_request(prompt_config)
+    #    gpt_responses_array.append(response)
 
+    # calls a function in llm.py which will execute one prompt multiple times parallely
+    gpt_responses_array = execute_requests_parallely(prompt_config, 3)
+
+    # sets the prompt for the validation of the generated responses
     prompt_config = gpt_response_validation_prompt(gpt_responses_array)
 
+    # this makes the final validation request to the openai api
     gpt_response = make_chatgpt_request(prompt_config)
 
+    # extract the response
     gpt_evaluation = gpt_response['text']
 
-    # converting the json answer string to a python dict
+    # convert the JSON string that the model returned to a python dictionary
     evaluation_dict = json_string_to_python_dict(gpt_evaluation)
 
+    # choose highest scoring answer (choose_best_gpt_answer located in helper.py)
     best_gpt_answer = gpt_responses_array[choose_best_gpt_answer(evaluation_dict["text"])]
 
+    result = {
+        "text": best_gpt_answer["explanation"],
+        "user": False
+    }
+
     # return the response to the frontend
-    return jsonify(best_gpt_answer)
+    return jsonify(result)
 
 
 @app.route('/check-quiz-answers', methods=['POST'])
@@ -180,6 +198,7 @@ def check_quiz_answers():
     question = request.json['question']
     user_answer = request.json['userAnswer']
 
+    # check if parameters exist (and type for the question)
     params_valid = validate_input(question, user_answer)
     question_valid = validate_question(question)
 
@@ -195,17 +214,20 @@ def check_quiz_answers():
             'output': 'There was something wrong with the format of the question. Error: ' + question_valid
         }, 406)
 
+    # prompt for evaluating the user answers to quiz questions (explain type questions only)
     prompt_config = check_answer_prompt(question, user_answer)
 
+    # openai api request with the final prompt config
     gpt_response = make_chatgpt_request(prompt_config)
 
     # chatgpt returns an JSON object with the answer to make it accessible in the frontend, the string is converted
     # to a python dictionary and then placed in the response
     gpt_evaluation = gpt_response['text']
 
-    # converting the json answer string to a python dict
+    # convert the JSON string that the model returned to a python dictionary
     evaluation_dict = json_string_to_python_dict(gpt_evaluation)
 
+    # return the result to the frontend
     return jsonify(evaluation_dict)
 
 
@@ -221,22 +243,26 @@ def analyse_quiz_results():
 
     misconceptions = request.json['misconceptions']
 
+    # check if misconceptions were provided
     if not misconceptions:
         return jsonify({
             'error': 'Misconceptions are missing',
             'output': 'Misconceptions are missing',
         }, 406)
 
+    # prompt for evaluating the results of the quizzes based on extracted misconceptions
     prompt_config = analyse_results_prompt(misconceptions)
 
+    # openai api request with the prompt config
     gpt_response = make_chatgpt_request(prompt_config)
 
+    # extract the model response
     gpt_evaluation = gpt_response['text']
 
+    # convert the JSON string that the model returned to a python dictionary
     evaluation_dict = json_string_to_python_dict(gpt_evaluation)
 
     return jsonify(evaluation_dict)
-
 
 
 @app.route('/delete-context', methods=['GET'])

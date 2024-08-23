@@ -67,8 +67,8 @@ function LLMChat({response, promptlessTextForChat, handleManualRequest, response
 
     return (
         <Paper elevation={3} sx={{height: '62em', my: 4, py: 2, px: 2, bgcolor: "fourthColor.main", borderRadius:3}}>
-            <Card className={"custom-border"} sx={{height: '40em', my: 2, py: 2, px: 2, bgcolor: "secondary.main", borderRadius:3}}>
-                <List ref={messagesEndRef} sx={{maxHeight: 600, overflowY: 'auto'}}>
+            <Card className={"custom-border"} sx={{height: '100em', my: 2, py: 2, px: 2, bgcolor: "secondary.main", borderRadius:3}}>
+                <List ref={messagesEndRef} sx={{maxHeight: 1500, overflowY: 'auto'}}>
                     {messages.map((message, index) => (
                         <ListItem key={index} sx={{paddingLeft: 0}}>
                             <Paper className={message.user ? "message-user" : "message-system"} elevation={2}

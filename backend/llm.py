@@ -1,5 +1,6 @@
 import json
 import os
+import concurrent.futures
 
 from dotenv import load_dotenv
 from flask import jsonify
@@ -42,7 +43,7 @@ def make_chatgpt_request(prompt_config):
             max_tokens=prompt_config["max_tokens"]
         )
 
-        # print(response.choices[0].message.content)
+        #print(response.choices[0].message.content)
 
         if response:
             return {
@@ -56,3 +57,24 @@ def make_chatgpt_request(prompt_config):
         print("An error occurred:", str(e))
         return None
 
+
+def execute_requests_parallely(prompt_config, num_requests=3):
+    gpt_response_array = []
+
+    def request_task():
+        return make_chatgpt_request(prompt_config)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(request_task) for _ in range(num_requests)]
+
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                result = future.result()
+                if result:
+                    answer = result["text"]
+                    answer_object = {"explanation": answer}
+                    gpt_response_array.append(answer_object)
+            except Exception as e:
+                print(f"Request failed: {e}")
+
+    return gpt_response_array

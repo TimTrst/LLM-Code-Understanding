@@ -19,7 +19,8 @@ const PromptlessInteraction = ({
         line_by_line: 'Line-By-Line',
         iterative_comparison: 'Iterative-Comparison',
         example: 'Example',
-        optimization: 'Optimization'
+        head_vs_tail_recursion: 'Head-vs-Tail-Recursion'
+        //optimization: 'Optimization'
     }
 
     const basePrompts = {
@@ -27,7 +28,8 @@ const PromptlessInteraction = ({
         line_by_line: 'Provide a step-by-step explanation for the following problem',
         iterative_comparison: 'Compare the following recursive code with its iterative equivalent.',
         example: 'Explain by showing an easy to understand, real life example.',
-        optimization: 'How can this code be optimized. Show an iterative equivalent. Which is more efficient?'
+        head_vs_tail_recursion: 'Explain the concepts of head and tail recursion using the provided code example.'
+        //optimization: 'How can this code be optimized. Show an iterative equivalent. Which is more efficient?'
     }
 
     const toolTipInfo = {
@@ -47,10 +49,13 @@ const PromptlessInteraction = ({
             tooltip: "Ask GPT to create an explanation by providing a real-world analogy that matches the recursive concept of the code provided.",
             position: "bottom"
         },
-        optimization: {
-            tooltip: "Ask GPT to show any optimization possibilities and an optimized version of the code.",
-            position: "right"
-        },
+        head_vs_tail_recursion: {
+            tooltip: "Ask GPT to create a comparison between the concept of head and tail recursion."
+        }
+        //optimization: {
+        //    tooltip: "Ask GPT to show any optimization possibilities and an optimized version of the code.",
+        //    position: "right"
+        //},
     }
 
     const promptlessInteractionTooltip = "These buttons are designed to make it easier for you to get explanations for your code without having to manually write prompts. Simply click on any of these buttons, and our application will automatically generate a prompt to the LLM API, providing you with explanations and insights into your code."
