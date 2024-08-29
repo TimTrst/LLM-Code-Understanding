@@ -113,6 +113,7 @@ def base_prompts(topic, user_input, feedback):
                 "---"
                 "CODE: "
                 "``` " + user_input + " ```. "
+                                      "---"
                                       "CLOSING REMARKS: "
                                       "Don't copy the whole code snippet in the answer, if needed, "
                                       "provide only parts. Maximum tokens: 500. "
@@ -139,7 +140,7 @@ def manual_prompt(user_question, user_input):
                    "---"
                    "CODE CONTEXT: "
                    "The user might ask questions about the following code that you should consider: "
-                   + user_input +
+                   "``` " + user_input + " ```. "
                    "---"
                    "CLOSING REMARKS: "
                    "Use a maximum of 500 tokens in your answer."),
@@ -211,7 +212,7 @@ def analyse_results_prompt(misconceptions):
     return prompt_config
 
 
-def gpt_response_validation_prompt(gpt_responses):
+def choose_best_explanation_prompt(gpt_responses, user_input):
     max_tokens = 600
     temperature = 0.3
 
@@ -230,7 +231,7 @@ def gpt_response_validation_prompt(gpt_responses):
                 scores to give a final score for each explanation.
                 ---
                 RETURN FORMAT:
-                Return the evaluation in the following JSON format:
+                Return evaluation in the following JSON format. Enclose the property names in double quotes for the JSON:
                 { {
                 "explanations": [
                     {
@@ -266,6 +267,10 @@ def gpt_response_validation_prompt(gpt_responses):
             Each object includes an "explanation" key 
             with the explanation as value: {gpt_responses}           
             ---
+            CODE:
+            This is the code that each of the explanations are referring to: 
+            "``` " + {user_input} + " ```. "
+            ---
             CLOSING REMARKS:
             Now evaluate the explanations based on the criteria and provide me with the final result in the JSON format
             mentioned before. Provide clear, comparative assessments for each criterion.
@@ -278,11 +283,62 @@ def gpt_response_validation_prompt(gpt_responses):
     return prompt_config
 
 
-def test_prompt():
+def validate_own_answer_prompt(explanation, user_input, original_prompt):
+    max_tokens = 600
+    temperature = 0.3
+
     prompt_config = {
-        "prompt": "Dies is ein Test",
-        "temperature": 0.3,
-        "max_tokens": 200,
+        "prompt":
+            f""" 
+                You are an expert assessing explanations of recursive Python functions. Your task is to find errors in 
+                these explanations. The errors might be subtle. I want you to create a new version of the explanation if 
+                you found a mistake.
+                ---
+                YOUR MAIN TASK:
+                You are validating an student explanation of a recursive Python function. Check the provided explanation completely for errors or 
+                mistakes. Validate by creating your own version of the explanation first and then compare it with the provided Explanation.
+                If you find that something is wrong, take the provided explanation and adjust the parts with mistakes.
+                If possible, replace only the parts of the original explanation that are incorrect. If no mistakes are found, then 
+                don't change the explanation and fill the JSON field in the response format "isCorrect" with the value
+                "yes" and leave the "errors" field as an empty array. If there is something wrong, then fill the "isCorrect" field with "no" and put into the
+                "errors" field the line(s) that were wrong. In the "explanation" field i want you to 
+                provide your own version of the the correct explanation for the user if something was wrong, or leave it empty, if nothing was wrong.
+                ---
+                EXPLANATION DESCRIPTION:
+                Here is the original task which resulted in the provided explanation. Use this to make your own version and to compare it with the provided one:
+                {original_prompt}               
+                ---
+                EXPLANATIONS:
+                Here is the explanation you are validating: {explanation}           
+                ---
+                CODE:
+                This is the code that the explanation is referring to: 
+                "``` " + {user_input} + " ```. "
+                ---
+                RETURN FORMAT:
+                Return validation in the following JSON format. Enclose the property names in double quotes for the JSON:
+                { {
+                    "isCorrect": "yes/no",
+                    "explanation": "Include your version of the provided explanation here, or leave empty if the explanation provided did not have errors",
+                    "errors": ["Include the error parts here, or return empty array for errors if the explanation provided did not have errors"],
+                } }
+                All keys in the json format should always exist, even when they are not filled with information.
+                ---
+                HEAD VS TAIL RECURSION:
+                If the problem might be related to head or tail recursion, please double check your answer. Don't rush to a conclusion, before finishing your assessment.
+                Only because the recursion is part of the last line does not imply tail recursion. 
+                Example: ```return n * factorial(n - 1)```. Here it is the last line of the code but it still needs to unwind from the call-stack and multiply the recursive results by n.
+                ---
+                CLOSING REMARKS:
+                Now validate the explanation and provide me with the final result in the JSON format
+                mentioned before. Keep the original structure and length of the provided explanation as much as possible.
+                Keep the structure of the given JSON format, even if nothing is to be included in the fields. If nothing
+                can be included, just leave the fields empty, but still keep the keys. I don't want you to explain the mistakes, i want you to write a new version of the provided explanation that does not have the mistakes that you found.
+                If no explanation is provided, then just return the empty JSON. Enclose the property names in double quotes for the JSON.
+                """,
+        "temperature": temperature,
+        "max_tokens": max_tokens
     }
 
     return prompt_config
+

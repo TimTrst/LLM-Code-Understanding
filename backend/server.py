@@ -1,11 +1,9 @@
-import json
-
 from flask import Flask, request, jsonify
 import datetime
 from compilecode import check_if_compilable
 from helper import validate_input, add_feedback, validate_question, json_string_to_python_dict, choose_best_gpt_answer
 from create_prompts import base_prompts, manual_prompt, check_answer_prompt, analyse_results_prompt, \
-    gpt_response_validation_prompt, test_prompt
+    choose_best_explanation_prompt, validate_own_answer_prompt
 from llm import make_chatgpt_request, execute_requests_parallely
 from config import Config
 
@@ -149,22 +147,14 @@ def explain_prompts_with_validation():
 
     # general prompt config with the full prompt, the temperature and max. token length in responses
     prompt_config = base_prompts(topic, user_input, feedback_string)
-    # prompt_config = test_prompt()
-
-    # enable this if the choice is sequential processing
-    # gpt_responses_array = []
-    # for i in range(3):
-    #    # make the chatgpt request
-    #    response = make_chatgpt_request(prompt_config)
-    #    gpt_responses_array.append(response)
 
     # calls a function in llm.py which will execute one prompt multiple times parallely
     gpt_responses_array = execute_requests_parallely(prompt_config, 3)
 
     # sets the prompt for the validation of the generated responses
-    prompt_config = gpt_response_validation_prompt(gpt_responses_array)
+    prompt_config = choose_best_explanation_prompt(gpt_responses_array, user_input)
 
-    # this makes the final validation request to the openai api
+    # this is the validation request to the openai api
     gpt_response = make_chatgpt_request(prompt_config)
 
     # extract the response
@@ -176,10 +166,36 @@ def explain_prompts_with_validation():
     # choose highest scoring answer (choose_best_gpt_answer located in helper.py)
     best_gpt_answer = gpt_responses_array[choose_best_gpt_answer(evaluation_dict["text"])]
 
+    # this will trigger the second validation step (check the best answer for mistakes)
+    # this works in mysterious ways, sometimes it actually fixes the error. Sometimes it makes it wrong.
+    prompt_config_validate = validate_own_answer_prompt(best_gpt_answer, user_input, prompt_config)
+    gpt_response = make_chatgpt_request(prompt_config_validate)
+    validation_gpt_response = gpt_response['text']
+
+    validation_gpt_response_dict = json_string_to_python_dict(validation_gpt_response)
+
+    print("highest scoring answer:")
+    print(best_gpt_answer)
+    print("\n")
+    print("Korrekt?:")
+    print(validation_gpt_response_dict["text"]["isCorrect"])
+    print("Errors?:")
+    print(validation_gpt_response_dict["text"]["errors"])
+
+    if validation_gpt_response_dict["text"]["isCorrect"] == "yes":
+        validated_explanation = best_gpt_answer
+    else:
+        validated_explanation = validation_gpt_response_dict["text"]["explanation"]
+
     result = {
-        "text": best_gpt_answer["explanation"],
+        "text": validated_explanation,
         "user": False
     }
+
+    #result = {
+    #    "text": best_gpt_answer["explanation"],
+    #    "user": False
+    #}
 
     # return the response to the frontend
     return jsonify(result)
