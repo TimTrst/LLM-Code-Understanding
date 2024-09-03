@@ -141,12 +141,16 @@ def manual_prompt(user_question, user_input):
                    "CODE CONTEXT: "
                    "The user might ask questions about the following code that you should consider: "
                    "``` " + user_input + " ```. "
+                   "Don't refer to this code as context, if the student prompt above seems unrelated to the context."
                    "---"
                    "CLOSING REMARKS: "
+                   "If the user does refer to the code or recursion, then answer the question generally, without focusing on the context."
                    "Use a maximum of 500 tokens in your answer."),
         "max_tokens": max_tokens,
         "temperature": 0.6
     }
+
+    print(prompt_config["prompt"])
 
     return prompt_config
 
@@ -160,18 +164,23 @@ def check_answer_prompt(question, user_answer):
 
     prompt_config = {
         "prompt": f"""
-            You are an evaluation system designed to assess a student's answer to a quiz question about recursion. 
-            Your goal is to understand the student's level of understanding and provide a fair evaluation based on the given context.
+            You are an evaluation system designed to assess a student's answer to a quiz question about recursion.
+            Your goal is to understand the student's answer and provide a fair evaluation based on the given context.
+            Your evaluation is supposed to be used to increase a score if the answer was correct, based on a quiz.
             ---
             QUESTION: 
             "{question_extracted}"
             ---
+            EVALUATION INSTRUCTIONS:
+            1. **Execute the provided Python code** with the given parameters (for example: `recursive_func([1,2,3,4,5],5)`) **before** beginning your evaluation.
+            2. Extract what the user thinks the function returns and compare it with the result you got by executing the function yourself.
+            3. Use the execution result as the primary basis for evaluating the accuracy of the student's answer.
+            4. Use the return value that the users identifies and compare it with your return value.
+                - Example: User: ".. the function returns 10." Your result of the function: 5. This indicates that the user answer is not correct, because 10 != 5.
+            ---
             CORRECT ANSWER CRITERIA: 
-            Consider the following elements that a correct answer might include (this is not exhaustive, but indicative):
-            - Explanation of what a recursive function is (e.g., a function that calls itself)
-            - Key components of recursion (e.g., base case, recursive case)
-            - How recursion terminates
-            - Examples or general understanding of how recursion works in solving problems
+            - Provide the correct numerical result of the function's execution.
+            - Correctness of general statements about the recursive concept/function
             ---
             STUDENT ANSWER:
              "{user_answer}"
@@ -180,7 +189,12 @@ def check_answer_prompt(question, user_answer):
                 "feedback": "Provide a brief explanation for your decision.",
                 "misconceptions": ["List the names of any misconceptions identified from the provided list. Leave this array empty if none match or if the question was correctly answered."]
             }} 
-            All keys of the return object should always be present, even if their value is empty.
+            ---
+            ADDITIONAL INFORMATION:
+            - If the student provides an incorrect numerical result, the answer must be marked as incorrect, regardless of general understanding.
+            - Use the actual output of the function when executed to check the accuracy of the student's numerical result. 
+            - If execution shows the student was wrong, explain why and provide corrective feedback.
+            - Misconceptions should only be noted if the student’s response suggests a misunderstanding based on the actual code behavior.
             """,
 
         "temperature": temperature,

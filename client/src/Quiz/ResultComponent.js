@@ -1,18 +1,17 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react'
 import PropTypes from "prop-types"
 import {Card, Container, Grid, Paper, Typography} from "@mui/material"
-import ResultCard from "./ResultCard";
-import axios from "axios";
-import LoadingIcon from "../LoadingIcon";
-import questionsInit from "./QuestionsInit";
-import questionsEnd from "./QuestionsEnd";
+import ResultCard from "./ResultCard"
+import axios from "axios"
+import LoadingIcon from "../LoadingIcon"
+import questionsInit from "./QuestionsInit"
+import questionsEnd from "./QuestionsEnd"
 
 
 const ResultComponent = ({preQuizResults, postQuizResults}) => {
 
     const [quizEvaluation, setQuizEvaluation] = useState("")
-    //todo set to false for gpt evaluation!!!!!!!
-    const hasFetchedData = useRef(true)
+    const hasFetchedData = useRef(false)
     const [selectSummaryPre, setSelectSummaryPre] = useState({})
     const [explainSummaryPre, setExplainSummaryPre] = useState({})
     const [selectSummaryPost, setSelectSummaryPost] = useState({})

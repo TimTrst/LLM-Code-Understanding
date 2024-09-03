@@ -59,6 +59,7 @@ function App() {
         console.log(responseTime)
     }, [responseTime]);
 
+    {/*
     //TODO entfernen, wenn testen/zeigen abgeschlossen
     const testingObject = {
         "multiple_choice_answers": {
@@ -113,7 +114,7 @@ function App() {
             "BFexecuteBefore",
             "InfiniteExecution"
         ]
-    }
+    }*/}
 
     // Function to check if conditions are met before allowing an api request to be sent
     // request: a valid request string to chatgpt (promptless/manual)
@@ -269,9 +270,6 @@ function App() {
             {(!preQuizSubmitted && showPreQuiz) ? <Quiz setQuizSubmitted={setPreQuizSubmitted}
                                                         setQuizResults={setPreQuizResults} quizType={'initial'}/> :
                 <Container sx={{display: 'flex', flexDirection: 'column', height: '100%', mt: 10}}>
-                    {/*TODO: Entfernen dieses Buttons!!! -> entfernen des test objects danach auch*/}
-                    <Button onClick={() => setPostQuizSubmitted(true)}>Test</Button>
-
                     <Typography variant="h1" sx={{my: 4, textAlign: 'center', color: 'secondary.main'}}>
                         Promptelix
                     </Typography>
@@ -310,8 +308,8 @@ function App() {
                         <Button onClick={handleShowEndingQuiz}><QuizIcon/></Button>
                     }
                     {postQuizSubmitted &&
-                        <div ref={quizResultEndRef}><ResultComponent preQuizResults={testingObject}
-                                                                     postQuizResults={testingObject}/></div>
+                        <div ref={quizResultEndRef}><ResultComponent preQuizResults={preQuizResults}
+                                                                     postQuizResults={postQuizResults}/></div>
                     }
                 </Container>}
         </div>

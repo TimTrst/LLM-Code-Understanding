@@ -1,4 +1,4 @@
-import {Card, CardContent, Typography} from "@mui/material";
+import {Card, CardContent, Checkbox, FormControlLabel, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
 import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
@@ -22,6 +22,22 @@ const ResultCard = ({title, score, selectSummary,explainSummary, quizType}) => {
             <CardContent>
                 <Typography variant="h5">{title}</Typography>
                 <Typography variant="h6">Score: {score}/5</Typography>
+                <FormControlLabel
+                            control={<Checkbox disabled={true}
+                                               checked={true}/>}
+                            label={"Correct Answer"}/>
+                <FormControlLabel
+                            control={<Checkbox sx={{'&.Mui-checked': {
+                                    color: "green"
+                                }}} disabled={true}
+                                               checked={true}/>}
+                            label={"User Answer Correct"}/>
+                <FormControlLabel
+                            control={<Checkbox sx={{'&.Mui-checked': {
+                                    color: "red"
+                                }}} disabled={true}
+                                               checked={true}/>}
+                            label={"User Answer Wrong"}/>
                 <Box mt={2}>
                     <Typography variant="subtitle1">Questions:</Typography>
                     {questions.length !== 0 && Object.keys(questions).map((item, index) => (

@@ -70,7 +70,7 @@ const Question = ({question, setSelectedAnswers, setExplainAnswers, selectedAnsw
             <Container>
                 <Card className={"custom-border"} sx={{
                     borderRadius: 3,
-                    height: '7em',
+                    height: '8em',
                     bgcolor: "secondary.main",
                     px: 2,
                     my: 3.4,
@@ -80,9 +80,9 @@ const Question = ({question, setSelectedAnswers, setExplainAnswers, selectedAnsw
                         sx: {'& .MuiInputBase-input': {color: 'white'}}
                     }}
                                inputProps={{
-                                   maxLength: 300
+                                   maxLength: 1000
                                }} multiline fullWidth
-                               minRows={3} maxRows={3} sx={{input: {color: 'white'}}}
+                               minRows={4} maxRows={4} sx={{input: {color: 'white'}}}
                                value={explainAnswers[question.id]?.answer || ""}
                                onChange={(e) => handleExplainChange(question.id, e.target.value)}>
                     </TextField>

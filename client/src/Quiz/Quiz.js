@@ -113,9 +113,12 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                         const feedback = result["feedback"] ? result["feedback"] : ""
                         const isCorrect = result["correct"] ? result["correct"] : false
 
+                        console.log("Here is the evaluation response gpt")
+                        console.log(result)
+
                         //gpt tries to identify a misconception in the answer of the user and return it as an array
                         let misconceptionsList = []
-                        misconceptionsList = result["misconception"]
+                        misconceptionsList = result["misconceptions"]
 
                         // add misconceptions that the model found in the users answer
                         // don't add them if they are already present
@@ -131,6 +134,7 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                         // if not -> flag as false and add the models feedback string
                         if (isCorrect) {
                             explainAnswers[key]["isCorrect"] = true
+                            explainAnswers[key]["feedback"] = feedback
                             score++
                         } else {
                             explainAnswers[key]["isCorrect"] = false
@@ -139,11 +143,12 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                     }
 
                 } catch (error) {
-                    console.log("There was an error while trying to request an answer from chatgpt" + error);
+                    console.log("There was an error while trying to request an answer from chatgpt " + error);
                 }
-
             }
         }
+        console.log("Explain Answers:")
+        console.log(explainAnswers)
 
         setQuizResults({
             multiple_choice_answers: selectedAnswers,
