@@ -23,7 +23,7 @@ const ResultCard = ({title, score, selectSummary,explainSummary, quizType}) => {
                 <Typography variant="h5">{title}</Typography>
                 <Typography variant="h6">Score: {score}/5</Typography>
                 <Box mt={2}>
-                    <Typography variant="subtitle1">Misconceptions:</Typography>
+                    <Typography variant="subtitle1">Questions:</Typography>
                     {questions.length !== 0 && Object.keys(questions).map((item, index) => (
                            <AccordionItem key={index} question={questions[index]} selectSummary={selectSummary} explainSummary={explainSummary} questionType={questions[index].type}/>
                     ))}

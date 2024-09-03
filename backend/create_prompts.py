@@ -153,26 +153,35 @@ def manual_prompt(user_question, user_input):
 
 def check_answer_prompt(question, user_answer):
     max_tokens = 300
-    temperature = 0.2
+    temperature = 0.3
 
     question_extracted = question["text"]
-    correct_answer = question["answers"][0]["text"]
+    # correct_answer = question["answers"][0]["text"]
 
     prompt_config = {
         "prompt": f"""
-    You are an evaluation system that is evaluating a student's answer to a quiz question.
-    ---
-    QUESTION: 
-    "{question_extracted}"
-    ---
-    CORRECT ANSWER: 
-    "{correct_answer}"
-    ---
-    STUDENT ANSWER:
-     "{user_answer}"
-    Return the evaluation in the following JSON format: {{ "correct": True/False, "misconception": [use the 
-    misconceptions names (only provide the names in this array) without descriptions from the provided context based 
-    on the provided student answer. Leave array empty if none match or if the question was correctly answered.] }} """,
+            You are an evaluation system designed to assess a student's answer to a quiz question about recursion. 
+            Your goal is to understand the student's level of understanding and provide a fair evaluation based on the given context.
+            ---
+            QUESTION: 
+            "{question_extracted}"
+            ---
+            CORRECT ANSWER CRITERIA: 
+            Consider the following elements that a correct answer might include (this is not exhaustive, but indicative):
+            - Explanation of what a recursive function is (e.g., a function that calls itself)
+            - Key components of recursion (e.g., base case, recursive case)
+            - How recursion terminates
+            - Examples or general understanding of how recursion works in solving problems
+            ---
+            STUDENT ANSWER:
+             "{user_answer}"
+            Return the evaluation in the following JSON format:
+             {{ "correct": True/False, 
+                "feedback": "Provide a brief explanation for your decision.",
+                "misconceptions": ["List the names of any misconceptions identified from the provided list. Leave this array empty if none match or if the question was correctly answered."]
+            }} 
+            All keys of the return object should always be present, even if their value is empty.
+            """,
 
         "temperature": temperature,
         "max_tokens": max_tokens,

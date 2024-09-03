@@ -81,6 +81,7 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
                                     correct_answer: question.answers[correctAnswer],
                                     user_answer: results.explain_answers[question.id].answer,
                                     is_correct: results.explain_answers[question.id].isCorrect,
+                                    feedback: results.explain_answers[question.id].feedback,
                                 }
 
                         if (quiz === "pre") {

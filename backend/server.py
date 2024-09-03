@@ -192,16 +192,11 @@ def explain_prompts_with_validation():
         "user": False
     }
 
-    #result = {
-    #    "text": best_gpt_answer["explanation"],
-    #    "user": False
-    #}
-
     # return the response to the frontend
     return jsonify(result)
 
 
-@app.route('/check-quiz-answers', methods=['POST'])
+@app.route('/check-quiz-answer', methods=['POST'])
 def check_quiz_answers():
     """
         check_quiz_answers checks the answer that the user provided when submitting a quiz that included a question

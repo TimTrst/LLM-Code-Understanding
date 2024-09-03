@@ -40,13 +40,18 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
 
     const handleExplainAnswer = useCallback(async (question, userAnswer) => {
         try {
-            return await axios.post('api/check-quiz-answers', {question, userAnswer})
+            return await axios.post('api/check-quiz-answer', {question, userAnswer})
         } catch (error) {
             console.log('Error fetching the data:', error)
         }
     }, [])
 
 
+    // this function will be called after a quiz is submitted
+    // calculating the scores based on the answers in:
+    // 1. selectedAnswers (object with all multiple choice answers)
+    // 2. explainAnswers (object with all explain type answers)
+    // note that the explain type answer is validated by gpt through an api call
     async function handleAnswers() {
 
         const questions_count = questions.length
@@ -62,26 +67,29 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
 
         setEvaluationStarted(true)
 
+        // total score for a quiz
         let score = 0
+        // gathering of misconceptions found by analyzing the quiz answers
         let misconceptions = []
 
         if (Object.keys(selectedAnswers).length !== 0) {
             for (const key in selectedAnswers) {
-
                 let isCorrect = true
-
                 const question = selectedAnswers[key]
 
+                // check every mutliple choice answer and
                 question.forEach((answer) => {
                     if (!answer.isCorrect) {
                         isCorrect = false
-                    }
 
-                    const misconception = answer.misconception
+                        // see what misconception was connected to the wrong answer
+                        const misconception = answer.misconception
 
-                    if (misconception) {
-                        if (!misconceptions.includes(misconception)) {
-                            misconceptions.push(misconception)
+                        // add the misconception if not already present
+                        if (misconception) {
+                            if (!misconceptions.includes(misconception)) {
+                                misconceptions.push(misconception)
+                            }
                         }
                     }
                 })
@@ -90,9 +98,6 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                 }
             }
         }
-
-        //answers with textual answers (ambiguous) are passed to chatgpt api
-        //gpt will return if the answer is correct
         if (Object.keys(explainAnswers).length !== 0) {
             for (const key in explainAnswers) {
                 //handle the checking of the correctness of the textual answer here before finishing the score calculation
@@ -105,13 +110,15 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
 
                     if (Object.keys(response).length !== 0) {
                         const result = response.data["text"]
-
-                        const isCorrect = result["correct"]
+                        const feedback = result["feedback"] ? result["feedback"] : ""
+                        const isCorrect = result["correct"] ? result["correct"] : false
 
                         //gpt tries to identify a misconception in the answer of the user and return it as an array
                         let misconceptionsList = []
                         misconceptionsList = result["misconception"]
 
+                        // add misconceptions that the model found in the users answer
+                        // don't add them if they are already present
                         if (misconceptionsList.length !== 0) {
                             misconceptionsList.forEach(misconception => {
                                 if (!misconceptions.includes(misconception)) {
@@ -120,11 +127,14 @@ const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
                             })
                         }
 
+                        // if the answer was evaluated by the model to be correct -> increment the score
+                        // if not -> flag as false and add the models feedback string
                         if (isCorrect) {
                             explainAnswers[key]["isCorrect"] = true
                             score++
                         } else {
                             explainAnswers[key]["isCorrect"] = false
+                            explainAnswers[key]["feedback"] = feedback
                         }
                     }
 

@@ -46,9 +46,10 @@ const AccordionItem = ({question, selectSummary, explainSummary, questionType}) 
                                     {explainSummary[question.id].user_answer}
                                 </ReactMarkdown>
                             </Typography>
-                            <Typography variant="subtitle1">Correct Answer</Typography>
+                            <Typography variant="subtitle1">Answer Feedback</Typography>
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {explainSummary[question.id].correct_answer.text}
+                                {/*explainSummary[question.id].correct_answer.text*/}
+                                {explainSummary[question.id].feedback}
                             </ReactMarkdown>
                         </Box>
                     ) : (
