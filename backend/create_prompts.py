@@ -133,7 +133,7 @@ def manual_prompt(user_question, user_input):
 
     prompt_config = {
         "prompt": ("You are a tutor, helping a student understand recursive functions in computer science. The "
-                   "student is asking you a question with a prompt they have formulated themselves. "
+                   "student is asking you a question with a prompt they have formulated themselves. You are always adressing the student directly, if needed."
                    "---"
                    "STUDENT PROMPT: "
                    + user_question +
@@ -149,8 +149,6 @@ def manual_prompt(user_question, user_input):
         "max_tokens": max_tokens,
         "temperature": 0.6
     }
-
-    print(prompt_config["prompt"])
 
     return prompt_config
 
@@ -329,15 +327,15 @@ def validate_own_answer_prompt(explanation, user_input, original_prompt):
                 ---
                 EXPLANATION DESCRIPTION:
                 Here is the original task which resulted in the provided explanation. Use this to make your own version and to compare it with the provided one:
-                {original_prompt}               
-                ---
-                EXPLANATIONS:
-                Here is the explanation you are validating: {explanation}           
+                {original_prompt}                     
                 ---
                 CODE:
                 This is the code that the explanation is referring to: 
                 "``` " + {user_input} + " ```. "
                 ---
+                EXPLANATION:
+                ---
+                Here is the explanation you are validating: {explanation}     
                 RETURN FORMAT:
                 Return validation in the following JSON format. Enclose the property names in double quotes for the JSON:
                 { {
@@ -365,3 +363,41 @@ def validate_own_answer_prompt(explanation, user_input, original_prompt):
 
     return prompt_config
 
+
+def summarize_prompt(prev_summary, user_request, system_response):
+    max_tokens = 800
+    temperature = 0.3
+
+    prompt_config = {
+        "prompt": f""" 
+        You are handling the task oriented dialog between a student and an AI model.
+        The goal of the dialog is to explain the student recursive python code and recursion as a concept. 
+        ---
+        YOUR MAIN TASK:
+        Based on the previous summary and the new user request and system response, update the summary by integrating 
+        the new information. Keep the summary concise and focused on the relevant points related to the explanation of recursion and Python code. 
+        This summary will be used to help the AI understand the student's goals and track the conversation context for future turns.
+        ---
+        PREVIOUS SUMMARY:
+        ```{prev_summary}```.
+        ---
+        USER REQUEST:
+        ```{user_request}```.
+        ---
+        SYSTEM RESPONSE:
+        ```{system_response}```.
+        ---
+        ADDITIONAL INSTRUCTIONS:
+        - Summarize the new user request and system response in relation to the task of explaining recursion and Python code.
+        - Retain essential information from the previous summary, but avoid redundancy.
+        - If the new user request or response does not add significant new information, preserve the current summary.
+        - Ensure the updated summary highlights the student's goals and progress in understanding recursion.
+        - Write the new summary in a maximum of 2 concise paragraphs. The summary is not for a human, but for a Large Language Model (LLM).
+        - If the previous summary is empty, use only the new request and response pair for the updated summary.
+        - Return the summary in a single string.
+        """,
+        "temperature": temperature,
+        "max_tokens": max_tokens
+    }
+
+    return prompt_config

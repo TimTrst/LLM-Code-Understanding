@@ -59,7 +59,8 @@ def manual_prompts():
     prompt_config = manual_prompt(user_question, user_input)
 
     # make the chatgpt request
-    response = make_chatgpt_request(prompt_config)
+    use_history = True
+    response = make_chatgpt_request(prompt_config, use_history)
 
     # return the response to the frontend
     return jsonify(response)
@@ -102,7 +103,8 @@ def explain_prompts():
     prompt_config = base_prompts(topic, user_input, feedback_string)
 
     # make the chatgpt request
-    response = make_chatgpt_request(prompt_config)
+    use_history = False
+    response = make_chatgpt_request(prompt_config, use_history)
 
     # return the response to the frontend
     return jsonify(response)
@@ -146,16 +148,17 @@ def explain_prompts_with_validation():
     feedback_string = add_feedback(feedback)
 
     # general prompt config with the full prompt, the temperature and max. token length in responses
-    prompt_config = base_prompts(topic, user_input, feedback_string)
+    prompt_config_original = base_prompts(topic, user_input, feedback_string)
 
     # calls a function in llm.py which will execute one prompt multiple times parallely
-    gpt_responses_array = execute_requests_parallely(prompt_config, 3)
+    gpt_responses_array = execute_requests_parallely(prompt_config_original, 3)
 
     # sets the prompt for the validation of the generated responses
-    prompt_config = choose_best_explanation_prompt(gpt_responses_array, user_input)
+    prompt_config_validation = choose_best_explanation_prompt(gpt_responses_array, user_input)
 
     # this is the validation request to the openai api
-    gpt_response = make_chatgpt_request(prompt_config)
+    use_history = False
+    gpt_response = make_chatgpt_request(prompt_config_validation, use_history)
 
     # extract the response
     gpt_evaluation = gpt_response['text']
@@ -168,8 +171,9 @@ def explain_prompts_with_validation():
 
     # this will trigger the second validation step (check the best answer for mistakes)
     # this works in mysterious ways, sometimes it actually fixes the error. Sometimes it makes it wrong.
-    prompt_config_validate = validate_own_answer_prompt(best_gpt_answer, user_input, prompt_config)
-    gpt_response = make_chatgpt_request(prompt_config_validate)
+    prompt_config_validate = validate_own_answer_prompt(best_gpt_answer, user_input, prompt_config_original)
+    use_history = False
+    gpt_response = make_chatgpt_request(prompt_config_validate, use_history)
     validation_gpt_response = gpt_response['text']
 
     validation_gpt_response_dict = json_string_to_python_dict(validation_gpt_response)
@@ -229,7 +233,8 @@ def check_quiz_answers():
     prompt_config = check_answer_prompt(question, user_answer)
 
     # openai api request with the final prompt config
-    gpt_response = make_chatgpt_request(prompt_config)
+    use_history = False
+    gpt_response = make_chatgpt_request(prompt_config, use_history)
 
     # chatgpt returns an JSON object with the answer to make it accessible in the frontend, the string is converted
     # to a python dictionary and then placed in the response
@@ -265,7 +270,8 @@ def analyse_quiz_results():
     prompt_config = analyse_results_prompt(misconceptions)
 
     # openai api request with the prompt config
-    gpt_response = make_chatgpt_request(prompt_config)
+    use_history = False
+    gpt_response = make_chatgpt_request(prompt_config, use_history)
 
     # extract the model response
     gpt_evaluation = gpt_response['text']
