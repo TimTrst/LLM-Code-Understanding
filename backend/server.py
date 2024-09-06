@@ -4,7 +4,7 @@ from compilecode import check_if_compilable
 from helper import validate_input, add_feedback, validate_question, json_string_to_python_dict, choose_best_gpt_answer
 from create_prompts import base_prompts, manual_prompt, check_answer_prompt, analyse_results_prompt, \
     choose_best_explanation_prompt, validate_own_answer_prompt
-from llm import make_chatgpt_request, execute_requests_parallely
+from llm import make_chatgpt_request, execute_requests_parallely, clear_history
 from config import Config
 
 app = Flask(__name__)
@@ -27,7 +27,6 @@ def index():
     }
 
 
-###
 @app.route('/manual-prompts', methods=['POST'])
 def manual_prompts():
     """
@@ -103,13 +102,14 @@ def explain_prompts():
     prompt_config = base_prompts(topic, user_input, feedback_string)
 
     # make the chatgpt request
-    use_history = False
+    use_history = True
     response = make_chatgpt_request(prompt_config, use_history)
 
     # return the response to the frontend
     return jsonify(response)
 
 
+# no history yet (but possible)
 @app.route('/explain-prompts-with-validation', methods=['POST'])
 def explain_prompts_with_validation():
     """
@@ -172,19 +172,15 @@ def explain_prompts_with_validation():
     # this will trigger the second validation step (check the best answer for mistakes)
     # this works in mysterious ways, sometimes it actually fixes the error. Sometimes it makes it wrong.
     prompt_config_validate = validate_own_answer_prompt(best_gpt_answer, user_input, prompt_config_original)
+    # history wont work here yet
     use_history = False
     gpt_response = make_chatgpt_request(prompt_config_validate, use_history)
     validation_gpt_response = gpt_response['text']
 
     validation_gpt_response_dict = json_string_to_python_dict(validation_gpt_response)
 
-    print("highest scoring answer:")
-    print(best_gpt_answer)
-    print("\n")
-    print("Korrekt?:")
-    print(validation_gpt_response_dict["text"]["isCorrect"])
-    print("Errors?:")
-    print(validation_gpt_response_dict["text"]["errors"])
+    print("validation return:")
+    print(validation_gpt_response_dict)
 
     if validation_gpt_response_dict["text"]["isCorrect"] == "yes":
         validated_explanation = best_gpt_answer
@@ -284,6 +280,7 @@ def analyse_quiz_results():
 
 @app.route('/delete-context', methods=['GET'])
 def delete_context():
+    clear_history()
     return {
         'status': 'success',
     }
