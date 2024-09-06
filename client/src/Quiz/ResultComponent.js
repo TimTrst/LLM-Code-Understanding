@@ -7,7 +7,14 @@ import LoadingIcon from "../LoadingIcon"
 import questionsInit from "./QuestionsInit"
 import questionsEnd from "./QuestionsEnd"
 
-
+/**
+ * The `ResultComponent` component renders the container for displaying both pre- and post-quiz results
+ *
+ * @param {Object} preQuizResults - Object that holds the pre-quiz results
+ * @param {Object} postQuizResults - Object that holds the post-quiz results
+ *
+ * @returns {JSX.Element} The JSX code for rendering the ResultComponent component.
+ */
 const ResultComponent = ({preQuizResults, postQuizResults}) => {
 
     const [quizEvaluation, setQuizEvaluation] = useState("")
@@ -17,6 +24,7 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
     const [selectSummaryPost, setSelectSummaryPost] = useState({})
     const [explainSummaryPost, setExplainSummaryPost] = useState({})
 
+    // api call to the backend -> returns an evaluation based on extracted misconceptions
     const handleGPTQuizEvaluation = useCallback(async (misconceptions) => {
         try {
             const response = await axios.post('/api/analyse-quiz-results', {misconceptions})
@@ -27,6 +35,7 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
         }
     }, [])
 
+    // on mount -> take results of both quizzes and bring them in a format to analyze the results properly
     useEffect(() => {
         if (Object.keys(preQuizResults).length !== 0 && Object.keys(postQuizResults).length !== 0) {
             const arrayForMap = ["pre", "post"]
@@ -42,6 +51,7 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
                     questions = questionsEnd
                 }
 
+                // merge the correct answers by the user with all answers
                 questions.map((question, index) => {
                     if (question.type === "MC") {
                         const correctAnswers = question.answers.filter(a => a.isCorrect).map(a => a.id)
@@ -56,6 +66,10 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
 
                         const combinedWithoutDuplicates = [...new Set(tempLists.flat())]
 
+                        // adding all possible answers for a single multiple-choice question
+                        // flagging all answers that were provided by the user (user_answered)
+                        // flagging them to be a correct answer or not
+                        // helps to check and color the multiple choice checkboxes in the result cards
                         const combinedAnswersArray = combinedWithoutDuplicates.map(answerId => ({
                             id: answerId,
                             user_answered: userAnswers.includes(answerId),
@@ -76,6 +90,8 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
                     } else if (question.type === "EXPLAIN") {
                         const correctAnswer = question.answers[0].id
 
+                        // final explain type object for a question
+                        // adding the feedback string by the gpt evaluation of the explain-type answer in case that the user answer was not correct
                         const explain_object = {
                                     correct_answer: question.answers[correctAnswer],
                                     user_answer: results.explain_answers[question.id].answer,
@@ -101,6 +117,7 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
         }
     }, [])
 
+    // on mount of this component -> send a request to gpt to evaluate the quiz results based on extracted misconceptions
     useEffect(() => {
         if (hasFetchedData.current) return
         hasFetchedData.current = true
@@ -108,6 +125,7 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
             let misconceptions = []
             setQuizEvaluation("")
 
+            // merge all found misconceptions in one array
             if (Object.keys(preQuizResults).length !== 0 && Object.keys(postQuizResults).length !== 0) {
                 const misconceptionsPre = preQuizResults.misconceptions;
                 const misconceptionsPost = postQuizResults.misconceptions;
@@ -115,6 +133,7 @@ const ResultComponent = ({preQuizResults, postQuizResults}) => {
             }
 
             if (misconceptions.length !== 0) {
+                // request the api call
                 const response = await handleGPTQuizEvaluation(misconceptions);
                 if (response && response.text && response.text.result) {
                     setQuizEvaluation(response.text.result);

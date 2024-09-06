@@ -32,8 +32,8 @@ def manual_prompts():
     """
         manual_prompts accepts manually written prompts by the user.
         These prompts get passed to the model as they are.
-        :param user_question: The user prompt
-        :param user_input: Code from the IDE frontend component
+        - param user_question (string): The user prompt
+        - param user_input (string): Code from the IDE frontend component
         :return: Returns a json object with the chat-gpt-model response
     """
     user_question = request.json['manualTopic']
@@ -70,8 +70,8 @@ def explain_prompts():
     """
         explain_prompts passes predefined prompts to the gpt-model.
         The prompts are created in create_prompts.py in the explain_prompts() function.
-        :param topic: this is the user chosen pre-defined prompt in the frontend application
-        :param user_input: Code from the IDE frontend component
+        - param topic (string): this is the user chosen pre-defined prompt in the frontend application
+        - param user_input (string): Code from the IDE frontend component
         :return: Returns a json object with the chat-gpt-model response
     """
     topic = request.json['promptlessTopic']
@@ -118,8 +118,8 @@ def explain_prompts_with_validation():
         question and sends them all to the gpt-model. The model is asked to evaluate the own answers based
         on some criteria. The "best" answer is then chosen.
         The prompts are created in create_prompts.py in the explain_prompts() function.
-        :param topic: this is the user chosen pre-defined prompt in the frontend application
-        :param user_input: Code from the IDE frontend component
+        - param topic (string): this is the user chosen pre-defined prompt in the frontend application
+        - param user_input (string): Code from the IDE frontend component
         :return: Returns a json object with the "best" chat-gpt-model response
     """
     topic = request.json['promptlessTopic']
@@ -166,24 +166,21 @@ def explain_prompts_with_validation():
     # convert the JSON string that the model returned to a python dictionary
     evaluation_dict = json_string_to_python_dict(gpt_evaluation)
 
-    # choose highest scoring answer (choose_best_gpt_answer located in helper.py)
+    # choose best scoring answer (choose_best_gpt_answer located in helper.py)
     best_gpt_answer = gpt_responses_array[choose_best_gpt_answer(evaluation_dict["text"])]
 
     # this will trigger the second validation step (check the best answer for mistakes)
     # this works in mysterious ways, sometimes it actually fixes the error. Sometimes it makes it wrong.
     prompt_config_validate = validate_own_answer_prompt(best_gpt_answer, user_input, prompt_config_original)
-    # history wont work here yet
+    # history won't work here yet
     use_history = False
     gpt_response = make_chatgpt_request(prompt_config_validate, use_history)
     validation_gpt_response = gpt_response['text']
 
     validation_gpt_response_dict = json_string_to_python_dict(validation_gpt_response)
 
-    print("validation return:")
-    print(validation_gpt_response_dict)
-
     if validation_gpt_response_dict["text"]["isCorrect"] == "yes":
-        validated_explanation = best_gpt_answer
+        validated_explanation = best_gpt_answer["explanation"]
     else:
         validated_explanation = validation_gpt_response_dict["text"]["explanation"]
 
@@ -202,8 +199,8 @@ def check_quiz_answers():
         check_quiz_answers checks the answer that the user provided when submitting a quiz that included a question
         where the user was asked to type in their own answers. The question and the user's answer are passed to
         a gpt model. The model checks this answer for correctness and returns the result.
-        :param question: The Question to be answered by the student (Object-> "id", "text", "answers")
-        :param user_answer: The user's answer to the question.
+        - param question (string): The Question to be answered by the student (Object-> "id", "text", "answers")
+        - param user_answer (string): The user's answer to the question.
         :return: Returns a json object with the chat-gpt-model response
     """
     question = request.json['question']
@@ -249,7 +246,7 @@ def analyse_quiz_results():
         analyse_quiz_results aims to analyse misconceptions that were gathered through answers to quiz questions.
         The gpt model gets the whole list of misconceptions about recursion everytime in the context.
         The goal is to provide the student with an evaluation of their possible problems regarding recursion.
-        :param misconceptions: An Array of misconceptions.
+        - param misconceptions (array): An Array of misconceptions.
         :return: Returns a json object with the chat-gpt-model evaluation
     """
 
@@ -280,6 +277,10 @@ def analyse_quiz_results():
 
 @app.route('/delete-context', methods=['GET'])
 def delete_context():
+    """
+    Deletes the history for further gpt requests.
+    :return: Json status object
+    """
     clear_history()
     return {
         'status': 'success',

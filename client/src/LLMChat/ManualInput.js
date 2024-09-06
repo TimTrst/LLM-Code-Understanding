@@ -3,11 +3,18 @@ import {Button, Card, TextField} from "@mui/material"
 import PropTypes from "prop-types"
 import SendIcon from '@mui/icons-material/Send'
 
-
+/**
+ * The `ManualInput` component renders the manual input component for manual prompts.
+ *
+ * @param {function} handleManualSend - sends the input to the parent component (LLMChat)
+ * @returns {JSX.Element} The JSX code for rendering the ManualInput component.
+**/
 const ManualInput = ({handleManualSend}) => {
 
+    // current manual input text state
     const [inputText, setInputText] = useState("")
 
+    // send the input to the parent component
     const handleSubmitText = (e) => {
         e.preventDefault();
         handleManualSend(inputText)

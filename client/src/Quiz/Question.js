@@ -4,12 +4,26 @@ import {Card, Checkbox, Container, FormControlLabel, FormGroup, TextField} from 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+/**
+ * The `Question` component renders a multiple-choice question or an explanation input based on the provided props.
+ *
+ * @param {Object} question - The question object containing details such as type, text, and answers.
+ * @param {function} setSelectedAnswers - Function to update the state of selected answers.
+ * @param {function} setExplainAnswers - Function to update the state of explain-type answers.
+ * @param {Object} selectedAnswers - Object holding the current selected answers for each question.
+ * @param {Object} explainAnswers - Object holding the current explanation text for each question.
+ * @param {boolean} isEvaluated - Boolean to check whether the Question component is used for the result table or for a quiz.
+ * Checkboxes will be disabled and colored differently if true.
+ *
+ * @returns {JSX.Element} The JSX code for rendering the question component.
+ */
 const Question = ({question, setSelectedAnswers, setExplainAnswers, selectedAnswers, explainAnswers, isEvaluated}) => {
 
     useEffect(() => {
         // console.log(selectedAnswers)
     }, [selectedAnswers]);
 
+    // sets the checked answers in the parent component on change
     const handleCheckboxChange = (questionId, answerId) => {
         setSelectedAnswers(prevSelected => {
             const currentAnswers = prevSelected[questionId] || []
@@ -36,6 +50,9 @@ const Question = ({question, setSelectedAnswers, setExplainAnswers, selectedAnsw
         }))
     }
 
+    // if used for the result table
+    // this function will see if a result was correctly answered or not
+    // then the checkboxes are colored differently
     const handleCheckAnswer = (questionId, answerId) => {
         const userAnswer = selectedAnswers[questionId]?.find(answer => answer.id === answerId)
         if (userAnswer && userAnswer.user_answered) {
@@ -44,6 +61,7 @@ const Question = ({question, setSelectedAnswers, setExplainAnswers, selectedAnsw
         return 'default';
     }
 
+    // renders a multiple choice type quiz paper
     const renderMultipleChoice = () => {
         return (
             <FormGroup>
@@ -65,6 +83,7 @@ const Question = ({question, setSelectedAnswers, setExplainAnswers, selectedAnsw
         )
     }
 
+    // renders a explain type quiz question
     const renderExplain = () => {
         return (
             <Container>

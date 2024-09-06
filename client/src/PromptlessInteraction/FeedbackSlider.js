@@ -7,6 +7,12 @@ import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral'
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied'
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied'
 
+/**
+ * The `FeedbackSlider` component renders a feedback slider for the user to rate the LLM response difficulty
+ * @param {function} setFeedback - function from the parent component (App) to set the feedback state there
+ *
+ * @returns {JSX.Element} The JSX code for rendering the FeedbackSlider component.
+ */
 const FeedbackSlider = React.memo(({ setFeedback }) => {
     const [localFeedback, setLocalFeedback] = useState(0)
 

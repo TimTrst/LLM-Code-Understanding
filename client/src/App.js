@@ -13,6 +13,11 @@ import ArrowTooltipComponent from "./ArrowTooltip";
 import InfoIcon from "@mui/icons-material/Info";
 import Box from "@mui/material/Box";
 
+/**
+ * The `App` component renders the main application
+ *
+ * @returns {JSX.Element} The JSX code for rendering the App in the index parent component.
+ */
 function App() {
     const [inputCode, setInputCode] = useState('') // code string from the ide component
     const [response, setResponse] = useState({}) // the string coming from chatgpt to either the promptless or prompt-based question
@@ -23,20 +28,17 @@ function App() {
     const [requestFailed, setRequestFailed] = useState(false) // check if a promptless/prompt-based request failed
     const [feedback, setFeedback] = useState(0)
 
-    const [showPreQuiz, setShowPreQuiz] = useState(null)
-    const [preQuizSubmitted, setPreQuizSubmitted] = useState(false)
-    const [preQuizResults, setPreQuizResults] = useState({answers: [], score: 0})
+    const [showPreQuiz, setShowPreQuiz] = useState(null) // if true -> the pre-quiz is rendered instead of the code-explain tool
+    const [preQuizSubmitted, setPreQuizSubmitted] = useState(false) // indicates if the pre-quiz was successfully finished
+    const [preQuizResults, setPreQuizResults] = useState({answers: [], score: 0}) // state to manage the pre-quiz results
 
-    const [showPostQuiz, setShowPostQuiz] = useState(false)
-    const [postQuizSubmitted, setPostQuizSubmitted] = useState(null)
-    const [postQuizResults, setPostQuizResults] = useState({answers: [], score: 0})
+    const [showPostQuiz, setShowPostQuiz] = useState(false) // if true -> the post-quiz is rendered instead of the code-explain tool
+    const [postQuizSubmitted, setPostQuizSubmitted] = useState(null) // indicates if the post-quiz was successfully finished
+    const [postQuizResults, setPostQuizResults] = useState({answers: [], score: 0}) // state to manage the post-quiz results
 
-    const quizResultEndRef = useRef(null);
+    const quizResultEndRef = useRef(null) // reference object to be appended at a html tag to scroll the page to if changed
 
-    const [explainPromptType, setExplainPromptType] = useState("explain-prompts")
-
-    ///todo clean up the timer
-    const [responseTime, setResponseTime] = useState(null)
+    const [explainPromptType, setExplainPromptType] = useState("explain-prompts") // state to handle the API parameter to generate a LLM response by a button click
 
     useEffect(() => {
         // Set the initial code when the component mounts
@@ -47,74 +49,6 @@ function App() {
         scrollToBottom()
     }, [postQuizSubmitted])
 
-    //TODO entfernen, wenn testen/zeigen abgeschlossen
-    useEffect(() => {
-        console.log(preQuizResults)
-        console.log(postQuizResults)
-    }, [preQuizSubmitted])
-
-    ///todo clean up timer
-    useEffect(() => {
-        console.log("API Request time in seconds:")
-        console.log(responseTime)
-    }, [responseTime]);
-
-    {/*
-    //TODO entfernen, wenn testen/zeigen abgeschlossen
-    const testingObject = {
-        "multiple_choice_answers": {
-            "0": [
-                {
-                    "id": 0,
-                    "text": "The base case should come before the recursive call in the function.",
-                    "misconception": "BCbeforeRecursiveCase",
-                    "isCorrect": false
-                }, {
-                    "id": 1,
-                    "text": "The base case is necessary to terminate recursion.",
-                    "misconception": "",
-                    "isCorrect": true
-                },
-            ],
-            "1": [
-                {
-                    "id": 1,
-                    "text": "Statements after the recursive call will execute only if the base case is met first.",
-                    "misconception": "",
-                    "isCorrect": false
-                }
-            ],
-            "2": [
-                {
-                    "id": 0,
-                    "text": "1 2 3 4 5",
-                    "misconception": "",
-                    "isCorrect": true
-                }
-            ],
-            "3": [
-                {
-                    "id": 3,
-                    "text": "infinite recursion",
-                    "misconception": "BFexecuteBefore",
-                    "isCorrect": false
-                }
-            ]
-        },
-        "explain_answers": {
-            "4": {
-                "answer": "This recursive function intends to multiply each element in an array. This function has an error: The recursive function is called twice, which will not return the expected result.",
-                "isCorrect": false,
-                "feedback": "This is some test feedback, you did not do good!"
-            }
-        },
-        "score": 1,
-        "misconceptions": [
-            "BCbeforeRecursiveCase",
-            "BFexecuteBefore",
-            "InfiniteExecution"
-        ]
-    }*/}
 
     // Function to check if conditions are met before allowing an api request to be sent
     // request: a valid request string to chatgpt (promptless/manual)
@@ -162,10 +96,6 @@ function App() {
     // API request to make a promptless request to chat gpt
     // "promptlessTopic" are shortcuts indicating for the backend which prompt is requested
     const handlePromptlessRequest = useCallback(async (promptlessTopic) => {
-
-        ///todo clean up timer
-        const startTime = performance.now()
-
         try {
             const isValid = checkRequest(promptlessTopic, inputCode)
             if (isValid) {
@@ -176,10 +106,6 @@ function App() {
                     inputCode,
                     feedback
                 })
-                ///todo clean up timer
-                const endTime = performance.now()
-                const timeTaken = (endTime - startTime) / 1000 //time in seconds
-                setResponseTime(timeTaken)
 
                 setResponseReceived(true)
 

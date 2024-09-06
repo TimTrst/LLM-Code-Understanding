@@ -4,13 +4,17 @@ import py_compile
 
 
 def check_if_compilable(user_input):
+    """
+        :param user_input: The code that the user wants to ask questions about
+        :return: The compilation result as a python dictionary with compilation status
+    """
     language = 'python'
 
     # Temporary file to save the code
     file_path = save_code_to_file(user_input, language)
 
     # Compile the code
-    result = compile_and_run(file_path, language)
+    result = try_to_compile(file_path, language)
 
     # Clean up the temporary file
     os.remove(file_path)
@@ -18,6 +22,11 @@ def check_if_compilable(user_input):
 
 
 def save_code_to_file(code, language):
+    """
+       :param code: The code that the user wants to ask questions about as a string
+       :param language: The code language as string
+       :return: The file path to the created temporary file
+   """
     extension = {
         'python': '.py',
         'c': '.c',
@@ -32,7 +41,12 @@ def save_code_to_file(code, language):
     return file_path
 
 
-def compile_and_run(file_path, language):
+def try_to_compile(file_path, language):
+    """
+       :param file_path: The path to the code file
+       :param language: The code language as a string
+       :return: The compilation result as a python dictionary with compilation status
+   """
     commands = {
         'python': ['python3', file_path],
     }

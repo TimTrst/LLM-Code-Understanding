@@ -14,6 +14,15 @@ import axios from "axios"
 import AlertNotification from "../AlertNotification"
 import LoadingIcon from "../LoadingIcon";
 
+/**
+ * The `Quiz` component renders a quiz question for a specific question id
+ *
+ * @param {function} setQuizSubmitted - The quiz submitted state function that updates the submitted state in the parent component (App)
+ * @param {function} setQuizResults - The quiz result state function that updates the results on the end of the quiz
+ * @param {string} quizType - The quiz type string (multiple choice or explain-type)
+ *
+ * @returns {JSX.Element} The JSX code for rendering the Quiz component.
+ */
 const Quiz = ({setQuizSubmitted, setQuizResults, quizType}) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
     const [questions, setQuestions] = useState(questionsInit)

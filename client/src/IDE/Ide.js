@@ -7,6 +7,14 @@ import PropTypes from "prop-types"
 import Box from "@mui/material/Box"
 import recursiveCodeExamples from "./CodeExamples";
 
+/**
+ * The `Ide` component renders an IDE for python code
+ *
+ * @param {string} inputCode - The code state string coming from a code examples or by user input
+ * @param {function} setInputCode - The code state function that updates the code in the parent component
+ *
+ * @returns {JSX.Element} The JSX code for rendering the Ide component.
+ */
 function Ide({inputCode, setInputCode}) {
     const [selectedExample, setSelectedExample] = useState('factorial')
     const language = "python"
@@ -16,29 +24,22 @@ function Ide({inputCode, setInputCode}) {
         python,
     }
 
-  /*  const handleLanguageChange = (event) => {
-        setLanguage(event.target.value)
-    }*/
-
+    // updates the code state in the parent App component
     const handleCodeChange = (value) => {
         setInputCode(value)
     }
 
+    // sets the code to an example code snippet
     const handleExampleChange = (event) => {
         const exampleKey = event.target.value
         setSelectedExample(exampleKey)
         setInputCode(recursiveCodeExamples[exampleKey].code)
     }
 
+    // IDE component
     return (
         <Box>
             <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                {/*<Select sx={{color: "white", backgroundColor: "secondary.main", border: "7px outset black"}}
-                        onChange={handleLanguageChange}
-                        value={language}
-                >
-                    <MenuItem value="python">Python</MenuItem>
-                </Select>*/}
                 <Select
                     sx={{color: "white", backgroundColor: "secondary.main", border: "7px outset black"}}
                     onChange={handleExampleChange}

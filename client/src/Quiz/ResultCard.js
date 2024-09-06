@@ -6,6 +6,18 @@ import AccordionItem from "./AccordionItem";
 import questionsInit from "./QuestionsInit";
 import questionsEnd from "./QuestionsEnd";
 
+/**
+ * The `ResultCard` component renders the quiz questions+answers for a specific quiz
+ * (one ResultCard component for the pre- and one for the post-quiz)
+ *
+ * @param {string} title - The quiz title string
+ * @param {number} score - The quiz score
+ * @param {Object} selectSummary - Object that contains the final results for the multiple-choice results of a quiz
+ * @param {Object} explainSummary - Object that contains the final results for the explain-type results of a quiz
+ * @param {string} quizType - String that indicates the type of quiz (pre- or post-quiz)
+ *
+ * @returns {JSX.Element} The JSX code for rendering the ResultCard component.
+ */
 const ResultCard = ({title, score, selectSummary,explainSummary, quizType}) => {
     const [questions, setQuestions] = useState([])
 

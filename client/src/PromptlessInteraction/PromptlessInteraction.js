@@ -5,6 +5,16 @@ import FeedbackSlider from "./FeedbackSlider"
 import ArrowTooltipComponent from "../ArrowTooltip"
 import InfoIcon from '@mui/icons-material/Info'
 
+/**
+ * The `PromptlessInteraction` component renders a Button row for the promptless interaction.
+ *
+ * @param {function} handlePromptlessRequest - Function from the parent component (App) to send the request to the backend
+ * @param {function} setPromptlessTextForChat - Function from the parent component that sets the template text to output in the chat component
+ * @param {boolean} responseReceived - If true, then a new request can be sent
+ * @param {function} setFeedback - sets the feedback in the parent component (App)
+ *
+ * @returns {JSX.Element} The JSX code for rendering the PromptlessInteraction component.
+ */
 const PromptlessInteraction = ({
                                    handlePromptlessRequest,
                                    setPromptlessTextForChat,

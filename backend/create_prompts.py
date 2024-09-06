@@ -1,4 +1,12 @@
 def base_prompts(topic, user_input, feedback):
+    """
+    Prompt config to handle "promptless" interaction. The specific predefined prompts will be included in a
+    template format. The topic of the interaction comes from one of the buttons from the frontend.
+    :param topic: The "promptless" interaction topic.
+    :param user_input: The code that the request is about
+    :param feedback: Possible user feedback about the difficulty of understanding
+    :return: Prompt configuration
+    """
     sub_prompt = ""
     temperature = 0
     max_tokens = 0
@@ -129,6 +137,12 @@ def base_prompts(topic, user_input, feedback):
 
 
 def manual_prompt(user_question, user_input):
+    """
+    Prompt config to include the manually created user prompt in a template format.
+    :param user_question: The manually created user prompt
+    :param user_input: The code that the user prompt might be about
+    :return: Prompt configuration
+    """
     max_tokens = 600
 
     prompt_config = {
@@ -154,6 +168,12 @@ def manual_prompt(user_question, user_input):
 
 
 def check_answer_prompt(question, user_answer):
+    """
+    Prompt config to check a user answer to a quiz question.
+    :param question: The quiz question
+    :param user_answer: The user answer
+    :return: Prompt configuration
+    """
     max_tokens = 300
     temperature = 0.3
 
@@ -203,6 +223,11 @@ def check_answer_prompt(question, user_answer):
 
 
 def analyse_results_prompt(misconceptions):
+    """
+    Prompt config to analyse the pre- and post-quiz results based on extracted misconceptions.
+    :param misconceptions: Extracted misconceptions based on the pre- and post-quiz
+    :return: Prompt configuration
+    """
     max_tokens = 500
     temperature = 0.4
 
@@ -234,6 +259,12 @@ def analyse_results_prompt(misconceptions):
 
 
 def choose_best_explanation_prompt(gpt_responses, user_input):
+    """
+    Prompt config to choose the best explanation based on scoring criteria.
+    :param gpt_responses: All explanations to be validated
+    :param user_input:  The code that the explanations were about
+    :return: Prompt configuration
+    """
     max_tokens = 600
     temperature = 0.3
 
@@ -305,6 +336,13 @@ def choose_best_explanation_prompt(gpt_responses, user_input):
 
 
 def validate_own_answer_prompt(explanation, user_input, original_prompt):
+    """
+    Prompt config to validate an explanation.
+    :param explanation: Explanation to be validated
+    :param user_input: Code that the explanation is about
+    :param original_prompt: The prompt that led to the explanation
+    :return: Prompt configuration
+    """
     max_tokens = 600
     temperature = 0.3
 
@@ -365,6 +403,13 @@ def validate_own_answer_prompt(explanation, user_input, original_prompt):
 
 
 def summarize_prompt(prev_summary, user_request, system_response):
+    """
+    Prompt config to summarize the conversation when the dialog history is full.
+    :param prev_summary: Summary of the conversation so far
+    :param user_request: The user request to be added to the new summary
+    :param system_response: The system response to be added to the new summary
+    :return: Prompt configuration
+    """
     max_tokens = 800
     temperature = 0.3
 

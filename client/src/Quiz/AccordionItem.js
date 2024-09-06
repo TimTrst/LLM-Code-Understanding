@@ -6,6 +6,17 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Question from "./Question";
 
+/**
+ * The `AccordionItem` renders a Question component for every quiz result item. The Question component is reused
+ * to show the questions of the quizzes, but filled with the correct answers and the user answers.
+ *
+ * @param {Object} question - The question object to be rendered
+ * @param {Object} selectSummary - The multiple-choice results with correct and wrong answers
+ * @param {function} explainSummary - The explain-type results with correct answer or feedback
+ * @param {function} questionType - The type of question (multiple choice or explain-type)
+ *
+ * @returns {JSX.Element} The JSX code for rendering the AccordionItem component.
+ */
 const AccordionItem = ({question, selectSummary, explainSummary, questionType}) => {
     const [expanded, setExpanded] = useState(false)
 
