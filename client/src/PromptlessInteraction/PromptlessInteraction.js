@@ -12,6 +12,7 @@ import InfoIcon from '@mui/icons-material/Info'
  * @param {function} setPromptlessTextForChat - Function from the parent component that sets the template text to output in the chat component
  * @param {boolean} responseReceived - If true, then a new request can be sent
  * @param {function} setFeedback - sets the feedback in the parent component (App)
+ * @param {number} setFeedback - feedback set in the parent component (App)
  *
  * @returns {JSX.Element} The JSX code for rendering the PromptlessInteraction component.
  */
@@ -19,7 +20,8 @@ const PromptlessInteraction = ({
                                    handlePromptlessRequest,
                                    setPromptlessTextForChat,
                                    responseReceived,
-                                   setFeedback
+                                   setFeedback,
+                                   feedback
                                }) => {
 
     const [questionAsked, setQuestionAsked] = useState(false)
@@ -100,7 +102,7 @@ const PromptlessInteraction = ({
                     })
                 }
             </Box>
-            {questionAsked && <FeedbackSlider setFeedback={setFeedback}/>}
+            {questionAsked && <FeedbackSlider setFeedback={setFeedback} feedback={feedback}/>}
         </Paper>)
 }
 
@@ -109,6 +111,7 @@ PromptlessInteraction.propTypes = {
     setPromptlessTextForChat: PropTypes.func.isRequired,
     responseReceived: PropTypes.bool,
     setFeedback: PropTypes.func,
+    feedback: PropTypes.number,
 }
 
 export default PromptlessInteraction

@@ -13,7 +13,7 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
  *
  * @returns {JSX.Element} The JSX code for rendering the FeedbackSlider component.
  */
-const FeedbackSlider = React.memo(({ setFeedback }) => {
+const FeedbackSlider = React.memo(({ setFeedback, feedback }) => {
     const [localFeedback, setLocalFeedback] = useState(0)
 
     const handleResetFeedback = useCallback(() => {
@@ -42,13 +42,13 @@ const FeedbackSlider = React.memo(({ setFeedback }) => {
                 {levels.map((level) => (
                     <Grid item key={level.level}>
                         <IconButton
-                            color={localFeedback === level.level ? 'primary' : 'default'}
+                            color={localFeedback === level.level ? 'info' : 'default'}
                             onClick={() => setLocalFeedback(level.level)}
                         >
                             {level.icon}
                         </IconButton>
                         <Typography variant="caption" display="block" align="center">
-                            {level.label}
+                            {level.label + (feedback === level.level ? ' (SET)' : '')}
                         </Typography>
                     </Grid>
                 ))}
@@ -65,6 +65,7 @@ const FeedbackSlider = React.memo(({ setFeedback }) => {
 
 FeedbackSlider.propTypes = {
     setFeedback: PropTypes.func.isRequired,
+    feedback: PropTypes.number.isRequired,
 }
 
 FeedbackSlider.displayName = 'FeedbackSlider'

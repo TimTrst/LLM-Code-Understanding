@@ -378,7 +378,7 @@ def validate_own_answer_prompt(explanation, user_input, original_prompt):
                 Return validation in the following JSON format. Enclose the property names in double quotes for the JSON:
                 { {
                     "isCorrect": "yes/no",
-                    "explanation": "Include your version of the provided explanation here, or leave empty if the explanation provided did not have errors",
+                    "explanation": "Include your version of the provided explanation here as a string, or leave empty if the explanation provided did not have errors",
                     "errors": ["Include the error parts here, or return empty array for errors if the explanation provided did not have errors"],
                 } }
                 All keys in the json format should always exist, even when they are not filled with information.

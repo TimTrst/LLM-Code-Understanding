@@ -218,6 +218,7 @@ function App() {
                         setPromptlessTextForChat={setPromptlessTextForChat}
                         responseReceived={responseReceived}
                         setFeedback={setFeedback}
+                        feedback={feedback}
                     />
                     <LLMChat
                         response={response}

@@ -179,10 +179,17 @@ def explain_prompts_with_validation():
 
     validation_gpt_response_dict = json_string_to_python_dict(validation_gpt_response)
 
+    print("Second validation result")
+    print(validation_gpt_response_dict)
+
     if validation_gpt_response_dict["text"]["isCorrect"] == "yes":
         validated_explanation = best_gpt_answer["explanation"]
+        print("Was correct")
+        print(validated_explanation)
     else:
         validated_explanation = validation_gpt_response_dict["text"]["explanation"]
+        if not (type(validation_gpt_response_dict["text"]["explanation"]) == str):
+            validated_explanation = "There was an error with the LLM response format. Please try again!"
 
     result = {
         "text": validated_explanation,
