@@ -28,20 +28,19 @@ def fibonacci(n):
     `
   },
   binarySearch: {
-    name: "Binary Search",
+    name: "Decrement Number",
     language: "python",
-    code: `
-def binary_search(arr, x):
-    left, right = 0, len(arr) - 1
-    while left <= right:
-        mid = (left + right) // 2
-        if arr[mid] == x:
-            return mid
-        elif arr[mid] < x:
-            left = mid + 1
-        else:
-            right = mid - 1
-    return -1
+    code: `def print_number(number):
+    
+    # print number
+    print(number)
+
+    # stopping condition 
+    if number == 0:
+        print('Stop Printing') 
+    else: 
+        # recursive call 
+        print_number(number - 1) 
     `
   }
   // Add more recursive code examples here

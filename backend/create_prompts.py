@@ -385,8 +385,9 @@ def validate_own_answer_prompt(explanation, user_input, original_prompt):
                 ---
                 HEAD VS TAIL RECURSION:
                 If the problem might be related to head or tail recursion, please double check your answer. Don't rush to a conclusion, before finishing your assessment.
-                Only because the recursion is part of the last line does not imply tail recursion. 
-                Example: ```return n * factorial(n - 1)```. Here it is the last line of the code but it still needs to unwind from the call-stack and multiply the recursive results by n.
+                Only because the recursion is part of the last line does not necessarily imply tail recursion. 
+                Check if there is further code to be executed after the recursive call was made. 
+                Example: ```return n * factorial(n - 1)```. Here it is the last line of the code but it still needs to unwind from the call-stack and multiply the recursive results by n, therefore making it head recurion.
                 ---
                 CLOSING REMARKS:
                 Now validate the explanation and provide me with the final result in the JSON format

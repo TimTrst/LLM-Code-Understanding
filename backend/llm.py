@@ -154,8 +154,8 @@ def make_chatgpt_request(prompt_config, use_history):
 
         # print("Dialog Summary:")
         # print(summary)
-        # print("Dialog History:")
-        # print(dialog_history)
+        #print("Dialog History:")
+        #print(dialog_history)
         # for turn in dialog_history:
         #    print(turn["role"])
 
