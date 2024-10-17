@@ -108,7 +108,30 @@ def base_prompts(topic, user_input, feedback):
             "provide an optimized version of the code."
         )
         temperature = 0.2
+    
         max_tokens = 700
+
+
+    if topic == "line_by_line":
+        sub_prompt = (
+            "Provide a thorough, line-by-line explanation of the following recursive code snippet. "
+            "For each line of code: "
+            "1. Explain what the line does and its role in the function. "
+            "2. Describe how it contributes to the recursion, "
+            "including its impact on the base case and the recursive case. "
+            "3. Clarify any important concepts or terms related to recursion present in the line, "
+            "such as function calls, base case checks, and state changes. "
+            "---"
+            "ADDITIONAL INFORMATION: "
+            "Focus on helping a novice programmer understand how each line fits into the bigger "
+            "picture of how recursion works. Use simple language and avoid technical jargon, unless explained. "
+            "If a line contributes to the creation of a recursive call, explain how the parameters "
+            "and state are passed along and changed. Provide insights into how the function's execution "
+            "evolves as each line runs, ensuring a clear understanding of the recursive process from start to finish."
+        )
+        temperature = 0.2
+        max_tokens = 700
+
 
     # Construct the full prompt
     prompt_config = {
@@ -121,13 +144,13 @@ def base_prompts(topic, user_input, feedback):
                 "---"
                 "CODE: "
                 "``` " + user_input + " ```. "
-                                      "---"
-                                      "CLOSING REMARKS: "
-                                      "Don't copy the whole code snippet in the answer, if needed, "
-                                      "provide only parts. Maximum tokens: 500. "
-                                      "Provide a clear and understandable explanation of the stated "
-                                      "problem for the novice programming student, "
-                                      "who is currently learning about recursion."
+                "---"
+                "CLOSING REMARKS: "
+                "Don't copy the whole code snippet in the answer, if needed, "
+                "provide only parts. Maximum tokens: 500. "
+                "Provide a clear and understandable explanation of the stated "
+                "problem for the novice programming student, "
+                "who is currently learning about recursion."
         ),
         "temperature": temperature,
         "max_tokens": max_tokens,
@@ -283,51 +306,51 @@ def choose_best_explanation_prompt(gpt_responses, user_input):
                 scores to give a final score for each explanation.
                 ---
                 RETURN FORMAT:
-                Return evaluation in the following JSON format. Enclose the property names in double quotes for the JSON:
+                Return the evaluation in the following JSON format. Enclose the property names in double quotes for the JSON:
                 { {
-                "explanations": [
-                    {
-                        "explanation_id": 0,
-                        "criteria_scores": {
-                            "Clarity and Simplicity": 8,
-                            "Conceptual Understanding": 9,
-                            "Appropriate Complexity": 7,
-                            "Accuracy": 6,
-                            "Visualization and Mental Models": 8,
-                            "Engagement and Motivation": 7,
+                    "explanations": [
+                        {
+                            "explanation_id": 0,
+                            "criteria_scores": {
+                                "Clarity and Simplicity": 8,
+                                "Conceptual Understanding": 9,
+                                "Appropriate Complexity": 7,
+                                "Accuracy": 6,
+                                "Visualization and Mental Models": 8,
+                                "Engagement and Motivation": 7,
+                            },
+                            "final_score": 45
                         },
-                        "final_score": 45
-                    },
-                    {
-                        "explanation_id": 1,
-                        "criteria_scores": {
-                            "Clarity and Simplicity": 4,
-                            "Conceptual Understanding": 6,
-                            "Appropriate Complexity": 5,
-                            "Accuracy": 9,
-                            "Visualization and Mental Models": 5,
-                            "Engagement and Motivation": 6,
-                        },
-                        "final_score": 35
-                    }
-                ]
-            } }
-            ---
-            EXPLANATIONS:
-            Here are the explanations provided in an array with objects. 
-            The ids of this array correspond with the evaluation object ids in your provided result.
-            Each object includes an "explanation" key 
-            with the explanation as value: {gpt_responses}           
-            ---
-            CODE:
-            This is the code that each of the explanations are referring to: 
-            "``` " + {user_input} + " ```. "
-            ---
-            CLOSING REMARKS:
-            Now evaluate the explanations based on the criteria and provide me with the final result in the JSON format
-            mentioned before. Provide clear, comparative assessments for each criterion.
-            If no explanations are provided, then just return the empty JSON.
-            """,
+                        {
+                            "explanation_id": 1,
+                            "criteria_scores": {
+                                "Clarity and Simplicity": 4,
+                                "Conceptual Understanding": 6,
+                                "Appropriate Complexity": 5,
+                                "Accuracy": 9,
+                                "Visualization and Mental Models": 5,
+                                "Engagement and Motivation": 6,
+                            },
+                            "final_score": 35
+                        }
+                    ]
+                } }
+                ---
+                EXPLANATIONS:
+                Here are the explanations provided in an array with objects. 
+                The ids of this array correspond with the evaluation object ids in your provided result.
+                Each object includes an "explanation" key 
+                with the explanation as value: {gpt_responses}           
+                ---
+                CODE:
+                This is the code that each of the explanations are referring to: 
+                "``` " + {user_input} + " ```. "
+                ---
+                CLOSING REMARKS:
+                Now evaluate the explanations based on the criteria and provide me with the final result in the JSON format
+                mentioned before. Provide clear, comparative assessments for each criterion.
+                If no explanations are provided, then just return the empty JSON.
+                """,
         "temperature": temperature,
         "max_tokens": max_tokens
     }

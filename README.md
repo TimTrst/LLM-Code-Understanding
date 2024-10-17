@@ -42,8 +42,8 @@ Make sure you have the following installed:
 ### Installation
 
 1. Clone the repository:
-   - git clone https://github.com/your-username/recursion-app.git
-   - cd recursion-app
+   - git clone git@gitlab.rz.uni-bamberg.de:cogsys/students/kogsys-15-ects-proj-ss24-trostmann.git
+   - cd kogsys-15-ects-proj-ss24-trostmann
 
 2. Install dependencies:
     - `cd backend`
@@ -53,6 +53,7 @@ Make sure you have the following installed:
 
 3. Set up API keys for OpenAi API
     - create your own environment file (.env) and include your api key
+        - place the created .env file into the ./backend directiory of the project
     - OPENAI_API_KEY = "Your api key"
     - OPENAI_ORG_ID = "Your organization id if you have one"
     - OPENAI_PROJECT_ID = "Project ID"
@@ -90,7 +91,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 - Chair of Cognitive Systems at University of Bamberg:
-    - Professor Ute Schmid
+    - Prof. Dr. Ute Schmid
     - M.Sc Sonja Niemann
 
 ---
