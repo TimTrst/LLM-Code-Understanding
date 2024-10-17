@@ -36,6 +36,8 @@ This web application is designed to help novice programmers understand and pract
 
 Make sure you have the following installed:
 
+- Python 3.9+
+- `pip` (Python package manager)
 - Node.js `vX.X.X`
 - npm `vX.X.X`
 
@@ -44,6 +46,14 @@ Make sure you have the following installed:
 1. Clone the repository:
    - git clone git@gitlab.rz.uni-bamberg.de:cogsys/students/kogsys-15-ects-proj-ss24-trostmann.git
    - cd kogsys-15-ects-proj-ss24-trostmann
+
+2. Create and activate a virtual environment
+    - On macOS/Linux
+        - python3 -m venv venv
+        - source venv/bin/activate
+    - On Windows
+        - python -m venv venv
+        - venv\Scripts\activate
 
 2. Install dependencies:
     - `cd backend`
