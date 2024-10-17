@@ -37,9 +37,7 @@ This web application is designed to help novice programmers understand and pract
 Make sure you have the following installed:
 
 - Python 3.9+
-- `pip` (Python package manager)
-- Node.js `vX.X.X`
-- npm `vX.X.X`
+- Node.js v17.2.0.+
 
 ### Installation
 
