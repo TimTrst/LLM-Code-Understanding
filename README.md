@@ -22,7 +22,7 @@ This web application is designed to help novice programmers understand and pract
 ## Technologies Used
 
 - **Frontend**: React.js, Material-UI
-- **Backend**: Node.js (if applicable)
+- **Backend**: Node.js
 - **API Integration**: GPT models (can be replaced with similar models with a some minor changes)
 - **State Management**: React Hooks (`useState`, `useEffect`)
 - **Markdown Rendering**: ReactMarkdown, remark-gfm
