@@ -42,8 +42,8 @@ Make sure you have the following installed:
 ### Installation
 
 1. Clone the repository:
-   - git clone git@gitlab.rz.uni-bamberg.de:cogsys/students/kogsys-15-ects-proj-ss24-trostmann.git
-   - cd kogsys-15-ects-proj-ss24-trostmann
+   - git clone git@github.com:TimTrst/LLM-Code-Understanding.git
+   - switch into the newly created directory
 
 2. Create and activate a virtual environment
     - On macOS/Linux
