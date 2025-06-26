@@ -24,7 +24,7 @@ This web application is designed to help novice programmers understand and pract
 ## Technologies Used
 
 - **Frontend**: React.js, Material-UI
-- **Backend**: Node.js (if applicable)
+- **Backend**: Node.js
 - **API Integration**: GPT models (can be replaced with similar models with a some minor changes)
 - **State Management**: React Hooks (`useState`, `useEffect`)
 - **Markdown Rendering**: ReactMarkdown, remark-gfm
@@ -45,8 +45,8 @@ Make sure you have the following installed:
 
 1. Clone the repository:
 
-   - git clone git@gitlab.rz.uni-bamberg.de:cogsys/students/kogsys-15-ects-proj-ss24-trostmann.git
-   - cd kogsys-15-ects-proj-ss24-trostmann
+   - git clone git@github.com:TimTrst/LLM-Code-Understanding.git
+   - switch into the newly created directory
 
 2. Create and activate a virtual environment
 
